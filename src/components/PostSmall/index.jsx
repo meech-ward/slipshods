@@ -3,7 +3,7 @@ import Image from "next/image"
 
 import PostActions from "../PostActions"
 
-export default function PostSmall({ onLike, onComment, liked, href, post, user, className = "" }) {
+export default function PostSmall({ onLike, onComment, href, post, user, className = "" }) {
 
   return (
     <div className={'lex flex-col overflow-hidden rounded-lg shadow-lg ' + className}>
@@ -44,7 +44,7 @@ export default function PostSmall({ onLike, onComment, liked, href, post, user, 
           </div>
         </a>
       </Link>
-      <PostActions onComment={onComment} onLike={onLike} liked={liked} totalComments={post.totalComments} totalLikes={post.totalLikes} />
+      <PostActions onComment={onComment} onLike={onLike} liked={post.liked} totalComments={post.totalComments} totalLikes={post.totalLikes} />
     </div>
   )
 }

@@ -2,11 +2,11 @@ import Image from "next/image"
 
 import PostActions from "../PostActions"
 
-export default function Post({ onComment, onLike, liked, post, user, className = "" }) {
+export default function Post({ onComment, onLike, post, user, className = "" }) {
 
   return (
-    <div className={'flex flex-col ' + className}>
-      <div className="flex flex-1 flex-col justify-between bg-white p-6">
+    <>
+      <div className={'flex flex-col justify-between ' + className}>
         <div className="mt-2 flex items-center">
           <div className="flex-shrink-0 text-gray-400">
 
@@ -34,7 +34,7 @@ export default function Post({ onComment, onLike, liked, post, user, className =
           {post.code}
         </p>
       </div>
-      <PostActions onComment={onComment} onLike={onLike} liked={liked} totalComments={post.totalComments} totalLikes={post.totalLikes} />
-    </div>
+      <PostActions onComment={onComment} onLike={onLike} liked={post.liked} totalComments={post.totalComments} totalLikes={post.totalLikes} />
+    </>
   )
 }

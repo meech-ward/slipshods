@@ -42,11 +42,11 @@ export default function Home({ posts }) {
 
 
 export async function getServerSideProps() {
-  const posts = await prisma.posts.findManyWithUser()
+  const posts = await prisma.post.findManyWithUser()
 
   return {
     props: {
-      posts: posts.map(post => ({ ...post, createdAt: post.createdAt.toISOString() }))
+      posts: posts
     },
   }
 }

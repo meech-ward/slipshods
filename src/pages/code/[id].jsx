@@ -12,6 +12,7 @@ import axios from 'axios'
 export default function Home(props) {
 
   const [post, setPost] = useState(props.post)
+  const [comments, setComments] = useState([])
 
   const handleNewComment = async () => {
 
@@ -36,17 +37,18 @@ export default function Home(props) {
         <title>{post.title}</title>
       </Head>
       <Post
-        className='max-w-2xl mx-auto'
+        className='max-w-2xl mx-auto px-6 my-6'
         post={post}
         user={post.user}
         onComment={handleNewComment}
         onLike={handleLike}
-        liked={post.liked}
       />
-      {post.comments.map(comment => (
-        <p className='max-w-2xl mx-auto' key={comment.id}>This is a comment{comment.content}</p>
-      ))}
-      <CommentForm className='max-w-2xl mx-auto' user={post.user} onSubmit={handleSubmitComment} />
+      <div className='max-w-2xl mx-auto px-6 my-6'>
+        {comments.map(comment => (
+          <p className='' key={comment.id}>This is a comment{comment.content}</p>
+        ))}
+      </div>
+      <CommentForm className='max-w-2xl mx-auto px-6 my-6' user={post.user} onSubmit={handleSubmitComment} />
     </>
   )
 }
@@ -58,19 +60,27 @@ export async function getStaticPaths() {
   }
 }
 
+async function findPostWithUser(id) {
+  return prisma.post.findUnique({
+    where: { id: +id },
+    include: {
+      user: { select: { name: true, image: true, id: true } },
+    }
+  })
+}
+
 export async function getStaticProps(context) {
   const id = context.params.id
-  const post = await prisma.posts.findUniqueWithUserAndComments({ where: { id: +id } })
+  const post = await findPostWithUser(+id)
   if (!post) {
     return {
       notFound: true
     }
   }
 
-  console.log(post)
   return {
     props: {
-      post: { ...post, comments: post.comments.map(c => ({ ...c, createdAt: c.createdAt.toISOString() })), createdAt: post.createdAt.toISOString() }
+      post: post
     },
   }
 }

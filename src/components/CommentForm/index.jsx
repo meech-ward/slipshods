@@ -9,7 +9,7 @@ export default function NewPostForm({ onSubmit, user, className = "" }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className={"mt-8 space-y-6 " + className} action="#" method="POST">
+    <form onSubmit={handleSubmit} className={"space-y-6 " + className} action="#" method="POST">
       <input type="hidden" name="remember" value="true" />
       <div className="rounded-md shadow-sm -space-y-px">
         <div className="flex items-start justify-items-stretch">

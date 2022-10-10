@@ -28,7 +28,6 @@ model Account {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
-  @@map("accounts")
 }
 
 model Session {
@@ -37,41 +36,28 @@ model Session {
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@map("sessions")
 }
 
 model User {
-  id             String      @id @default(cuid())
+  id             String     @id @default(cuid())
   name           String?
-  email          String?     @unique
+  email          String?    @unique
   emailVerified  DateTime?
   image          String?
-  createdAt      DateTime    @default(now())
-  totalPosts     Int         @default(0)
-  totalComments  Int         @default(0)
-  totalLikes     Int         @default(0)
-  totalFollowers Int         @default(0)
-  totalFollowing Int         @default(0)
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  totalPost      Int        @default(0)
+  totalComments  Int        @default(0)
+  totalLikes     Int        @default(0)
+  totalFollowers Int        @default(0)
+  totalFollowing Int        @default(0)
   accounts       Account[]
   sessions       Session[]
-  posts          Posts[]
-  comments       Comments[]
-  likes          Likes[]
-  followers      Followers[] @relation("follower")
-  following      Followers[] @relation("following")
-
-  @@map("users")
-}
-
-model Followers {
-  id          String @id @default(cuid())
-  follower    User   @relation(name: "follower", fields: [followerId], references: [id])
-  followerId  String
-  following   User   @relation(name: "following", fields: [followingId], references: [id])
-  followingId String
-
-  @@map("followers")
+  post           Post[]
+  comments       Comment[]
+  likes          Like[]
+  followers      Follower[] @relation("follower")
+  following      Follower[] @relation("following")
 }
 
 model VerificationToken {
@@ -80,37 +66,49 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
-  @@map("verificationtokens")
 }
 
-model Posts {
-  id            Int        @id @default(autoincrement())
+model Follower {
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  follower    User     @relation(name: "follower", fields: [followerId], references: [id])
+  followerId  String
+  following   User     @relation(name: "following", fields: [followingId], references: [id])
+  followingId String
+}
+
+model Post {
+  id            Int       @id @default(autoincrement())
   title         String
-  code          String     @db.Text
-  totalComments Int        @default(0)
-  totalLikes    Int        @default(0)
-  createdAt     DateTime   @default(now())
+  code          String    @db.Text
+  totalComments Int       @default(0)
+  totalLikes    Int       @default(0)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
   userId        String
-  user          User       @relation(fields: [userId], references: [id])
-  comments      Comments[]
-  likes         Likes[]
+  user          User      @relation(fields: [userId], references: [id])
+  comments      Comment[]
+  likes         Like[]
 }
 
-model Comments {
+model Comment {
   id        Int      @id @default(autoincrement())
   content   String   @db.Text
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   userId    String
   user      User     @relation(fields: [userId], references: [id])
   postId    Int
-  post      Posts    @relation(fields: [postId], references: [id])
+  post      Post     @relation(fields: [postId], references: [id])
 }
 
-model Likes {
+model Like {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   userId    String
   user      User     @relation(fields: [userId], references: [id])
   postId    Int
-  post      Posts    @relation(fields: [postId], references: [id])
+  post      Post     @relation(fields: [postId], references: [id])
 }

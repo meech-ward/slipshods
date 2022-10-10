@@ -27,10 +27,10 @@ user={{
 
 
 export const Liked = (args) => <PostSmall 
-liked={true}
 className='max-w-2xl mx-auto' 
 href="#"
 post={{
+  liked: true,
   title: "My first post",
   code: "const a = 1",
   totalComments: 10,

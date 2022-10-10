@@ -34,8 +34,8 @@ post={{
   code: "const a = 1",
   totalComments: 10,
   totalLikes: 10,
+  liked: true
 }} 
-liked={true}
 user={{
   name: "John Doe",
   image: "https://www.placecage.com/gif/284/196"

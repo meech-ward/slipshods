@@ -30,7 +30,7 @@ async function post(req, res) {
             }
           },
         }),
-      prisma.posts.create({
+      prisma.post.create({
         data: {
           title,
           code,
@@ -81,7 +81,7 @@ async function post(req, res) {
 }
 
 async function get(req, res) {
-  const posts = await prisma.posts.findMany({
+  const posts = await prisma.post.findMany({
     orderBy: {
       createdAt: "desc"
     },

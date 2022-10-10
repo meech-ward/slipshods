@@ -17,9 +17,33 @@ if (process.env.NODE_ENV === "production") {
   prisma = global.prisma
 }
 
-console.log({posts, prisma: prisma.posts})
-// prisma.posts = Object.create(prisma.posts, posts)
-Object.assign(prisma.posts, posts)
+const convertDatesToString = (post) => {
+  post.createdAt && (post.createdAt = post.createdAt.toString())
+  post.updatedAt && (post.updatedAt = post.updatedAt.toString())
+}
+
+prisma.$use(async (params, next) => {
+  console.log(params)
+  
+
+  // if (params.model == 'Post' && params.action == 'delete') {
+  //   // Logic only runs for delete action and Post model
+  // }
+  const result = await next(params)
+  console.log({result})
+  if (params.action.startsWith("find")) {
+    if (Array.isArray(result)) {
+      result.forEach(convertDatesToString)
+    } else {
+      convertDatesToString(result)
+    }
+  }
+  return result
+})
+
+console.log({posts, prisma: prisma.post})
+// prisma.post = Object.create(prisma.post, posts)
+Object.assign(prisma.post, posts)
 
 
 export default prisma
