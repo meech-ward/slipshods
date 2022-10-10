@@ -7,7 +7,7 @@ import Post from '../../components/Post'
 import CommentForm from '../../components/CommentForm'
 import Comments from '../../components/Comments'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import useSWR from 'swr'
 
 import axios from 'axios'
@@ -21,6 +21,17 @@ export default function Home(props) {
   const { data: session } = useSession()
 
   const [post, setPost] = useState(props.post)
+  const [postedComment, setPostedComment] = useState(false)
+
+  useEffect(() => {
+    if (!postedComment) {
+      return
+    }
+    window.scrollTo({
+      top: document.body.scrollHeight,
+      behavior: 'smooth'
+    })
+  }, [postedComment])
 
   const { data: comments, error: commentsError, mutate: mutateComments } = useSWR(
     '/api/comments?postId=' + post.id,
@@ -50,6 +61,7 @@ export default function Home(props) {
       ...post,
       totalComments: post.totalComments + 1,
     })
+    setPostedComment(true)
   }
 
   return (
@@ -64,9 +76,11 @@ export default function Home(props) {
         onComment={handleNewComment}
         onLike={handleLike}
       />
-      {session && <CommentForm className='max-w-2xl mx-auto px-6 my-6' user={session.user} onSubmit={handleSubmitComment} />}
+      <div className='max-w-2xl mx-auto px-6 my-6 border-t border-gray-200'>
+      {session && <CommentForm className='my-6' user={session.user} onSubmit={handleSubmitComment} />}
       
-      <Comments className='max-w-2xl mx-auto px-6 my-6' comments={comments} />
+      <Comments className='mt-6 mb-12' comments={comments} />
+      </div>
     </>
   )
 }

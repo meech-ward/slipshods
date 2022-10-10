@@ -18,11 +18,13 @@ export default function Comment({ comment, user, className }) {
           </h3>
           <p className="text-sm text-gray-500">{comment.createdAt}</p>
         </div>
-        <div className="text-md text-gray-500">
+        <pre className="text-md text-gray-500">
           {/* <CommentMarkdown mdxSource={comment.mdxSource} />
            */}
-           {comment.content}
-        </div>
+           <code>
+            {comment.content}
+           </code>
+        </pre>
         {/* {comment.post &&
           <Link href={`/${comment.post}`}>
             <a className="text-sm text-gray-500 underline">{comment.post}</a>

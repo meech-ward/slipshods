@@ -1,8 +1,8 @@
-import Comment from './index'
+import Comments from './index'
 
 export default {
-  title: 'Comment',
-  component: Comment,
+  title: 'Comments',
+  component: Comments,
   argTypes: {
     onSubmit: { action: 'submit' },
   }

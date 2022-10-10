@@ -8,13 +8,22 @@ export default {
   }
 }
 
+const code = `
+some js code to do something:
+\`\`\`js
+const a = 1
+const b = 2
+const c = a + b
+\`\`\`
+`
+
 
 export const Primary = (args) => <Post 
 className='max-w-2xl mx-auto' 
 href="#"
 post={{
   title: "My first post",
-  code: "const a = 1",
+  code: code,
   totalComments: 10,
   totalLikes: 10,
 }} 
@@ -31,7 +40,7 @@ className='max-w-2xl mx-auto'
 href="#"
 post={{
   title: "My first post",
-  code: "const a = 1",
+  code: code,
   totalComments: 10,
   totalLikes: 10,
   liked: true

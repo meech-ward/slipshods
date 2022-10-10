@@ -7,7 +7,7 @@ import { HeartIcon as HeartIconSolid } from '@heroicons/react/24/solid'
 export default function PostActions({ onComment, onLike, totalLikes, totalComments, liked, className = "" }) {
 
   return (
-    <div className={'flex items-center justify-center ' + className}>
+    <div className={'flex items-center justify-between ' + className}>
       <button
         onClick={onComment}
         className="flex flex-col items-center justify-center px-2 py-2 border border-transparent text-sm font-medium rounded-md hover:outline-none text-gray-400 hover:text-gray-500"

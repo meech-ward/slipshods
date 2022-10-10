@@ -5,8 +5,8 @@ import PostActions from "../PostActions"
 export default function Post({ onComment, onLike, post, user, className = "" }) {
 
   return (
-    <>
-      <div className={'flex flex-col justify-between ' + className}>
+    <div className={className}>
+      <div className={'flex flex-col justify-between'}>
         <div className="mt-2 flex items-center">
           <div className="flex-shrink-0 text-gray-400">
 
@@ -32,11 +32,17 @@ export default function Post({ onComment, onLike, post, user, className = "" }) 
         </div>
         <pre className="mt-5 mx-5 text-base text-gray-500">
           <code>
-          {post.code}
+            {post.code}
           </code>
         </pre>
       </div>
-      <PostActions onComment={onComment} onLike={onLike} liked={post.liked} totalComments={post.totalComments} totalLikes={post.totalLikes} />
-    </>
+      <PostActions
+        className="mt-6"
+        onComment={onComment}
+        onLike={onLike}
+        liked={post.liked}
+        totalComments={post.totalComments}
+        totalLikes={post.totalLikes} />
+    </div>
   )
 }

@@ -43,7 +43,14 @@ async function post(req, res) {
         }
       })
     ])
-    res.status(201).json({ comment })
+    res.status(201).json({ comment: {
+      ...comment,
+      user: {
+        name: updatedUser.name,
+        image: updatedUser.image,
+        id: updatedUser.id,
+      }
+    } })
   } catch (error) {
     console.error(error)
     res.status(500).json({ error: "Internal Server Error" })
