@@ -25,7 +25,7 @@ async function post(req, res) {
             id: user.id
           },
           data: {
-            totalComments: {
+            totalPosts: {
               increment: 1
             }
           },

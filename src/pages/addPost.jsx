@@ -12,7 +12,7 @@ import { useRouter } from 'next/router'
 export default function Profile({ user }) {
   const router = useRouter()
 
-  const handleSubmit = async ({title, code}) => {
+  const handleSubmit = async ({ title, code }) => {
     const { data } = await axios.post('/api/posts', { title, code })
     console.log(data)
     router.push(`/code/${data.post.id}`)
@@ -25,9 +25,9 @@ export default function Profile({ user }) {
       <div className="pt-8 pb-10 lg:pt-12 lg:pb-14 mx-auto max-w-7xl px-2">
         <h1 className='text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl md:text-6xl'>Add Code Example</h1>
 
-        
+
         <div className='max-w-4xl mx-auto'>
-        <NewPostForm onSubmit={handleSubmit} />
+          <NewPostForm className='max-w-2xl' onSubmit={handleSubmit} />
         </div>
 
       </div>

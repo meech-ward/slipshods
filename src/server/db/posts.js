@@ -20,7 +20,7 @@ const posts = {
       }
     })
   },
-  async findUniqueWithUser({where}) {
+  async findUniqueWithUserAndComments({where}) {
     return this.findUnique({
       where,
       include: {
@@ -28,6 +28,19 @@ const posts = {
           select: {
             name: true,
             image: true,
+          }
+        },
+        comments: {
+          select: {
+            id: true,
+            content: true,
+            createdAt: true,
+            user: {
+              select: {
+                name: true,
+                image: true,
+              }
+            }
           }
         }
       }

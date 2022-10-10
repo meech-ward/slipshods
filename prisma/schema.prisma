@@ -99,7 +99,6 @@ model Posts {
 model Comments {
   id        Int      @id @default(autoincrement())
   content   String   @db.Text
-  code      String
   createdAt DateTime @default(now())
   userId    String
   user      User     @relation(fields: [userId], references: [id])

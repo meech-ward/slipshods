@@ -7,6 +7,8 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { queries } from '@storybook/testing-library'
 
+import PostSmall from '../components/PostSmall'
+
 export default function Home({ posts }) {
 
   const { data: session } = useSession()
@@ -19,26 +21,16 @@ export default function Home({ posts }) {
       <div className="pt-8 pb-10 lg:pt-12 lg:pb-14 mx-auto max-w-7xl px-2">
         <h1 className='text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl md:text-6xl'>Code Examples</h1>
 
-        <div className='max-w-4xl mx-auto'>
+        <div className='max-w-2xl mx-auto'>
           <ul className='mt-8'>
             {posts.map(post => (
-              <li key={post.id} className='mb-4'>
-                <Link href={`/code/${post.id}`}>
-                  <a>
-                    <Image
-                      src={post.user.image}
-                      alt={post.user.name}
-                      width={40}
-                      height={40}
-                      className='rounded-full'
-                    />
-                    <span className='ml-2 text-lg text-gray-900'>{post.title}</span>
-                    <span className='ml-2 text-sm text-gray-500'>{post.user.name}</span>
-                    <pre>
-                      {post.code}
-                    </pre>
-                  </a>
-                </Link>
+              <li key={post.id}>
+                <PostSmall
+                className='my-10'
+                href={`/code/${post.id}`}
+                post={post}
+                user={post.user}
+                />
               </li>
             ))}
           </ul>
