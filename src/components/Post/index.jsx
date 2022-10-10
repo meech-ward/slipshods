@@ -30,9 +30,11 @@ export default function Post({ onComment, onLike, post, user, className = "" }) 
             </div>
           </div>
         </div>
-        <p className="mt-5 mx-5 text-base text-gray-500">
+        <pre className="mt-5 mx-5 text-base text-gray-500">
+          <code>
           {post.code}
-        </p>
+          </code>
+        </pre>
       </div>
       <PostActions onComment={onComment} onLike={onLike} liked={post.liked} totalComments={post.totalComments} totalLikes={post.totalLikes} />
     </>

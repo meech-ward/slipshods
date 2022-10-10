@@ -35,10 +35,9 @@ async function post(req, res) {
           }
         },
       }),
-      prisma.comments.create({
+      prisma.comment.create({
         data: {
           content: content,
-          code: content,
           userId: user.id,
           postId
         }
@@ -52,12 +51,30 @@ async function post(req, res) {
 }
 
 async function get(req, res) {
-  const { postId } = req.query
-  const comments = await prisma.comments.findManyWithUser({
+  const { postId, lastId, skip = 0, take = 20 } = req.query
+  const comments = await prisma.comment.findMany({
+    skip: lastId ? 1 : skip,
+    take,
+    orderBy: {
+      id: 'asc'
+    },
+    cursor: lastId ? {
+      id: lastId
+    } : undefined,
     where: {
-      postId: Number(postId)
+      postId: Number(postId),
+    },
+    include: {
+      user: {
+        select: {
+          name: true,
+          image: true,
+          id: true,
+        }
+      }
     }
   })
+
   res.status(200).json({ comments })
 }
 

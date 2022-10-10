@@ -18,19 +18,14 @@ if (process.env.NODE_ENV === "production") {
 }
 
 const convertDatesToString = (post) => {
-  post.createdAt && (post.createdAt = post.createdAt.toString())
-  post.updatedAt && (post.updatedAt = post.updatedAt.toString())
+  post?.createdAt && (post.createdAt = post.createdAt.toString())
+  post?.updatedAt && (post.updatedAt = post.updatedAt.toString())
 }
 
 prisma.$use(async (params, next) => {
-  console.log(params)
   
-
-  // if (params.model == 'Post' && params.action == 'delete') {
-  //   // Logic only runs for delete action and Post model
-  // }
   const result = await next(params)
-  console.log({result})
+  
   if (params.action.startsWith("find")) {
     if (Array.isArray(result)) {
       result.forEach(convertDatesToString)

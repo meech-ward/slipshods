@@ -5,29 +5,50 @@ import Head from 'next/head'
 
 import Post from '../../components/Post'
 import CommentForm from '../../components/CommentForm'
+import Comments from '../../components/Comments'
 
 import { useState } from 'react'
+import useSWR from 'swr'
+
 import axios from 'axios'
+
+import { useSession, signIn, signOut } from "next-auth/react"
+
+const fetcher = (url) => axios.get(url).then(res => res.data.comments)
 
 export default function Home(props) {
 
+  const { data: session } = useSession()
+
   const [post, setPost] = useState(props.post)
-  const [comments, setComments] = useState([])
+
+  const { data: comments, error: commentsError, mutate: mutateComments } = useSWR(
+    '/api/comments?postId=' + post.id,
+    fetcher,
+    {
+      fallbackData: []
+    }
+  )
 
   const handleNewComment = async () => {
 
   }
+
   const handleLike = async () => {
-    setPost({ ...post, liked: !post.liked, likes: post.likes + 1 })
+    const res = await axios.post(`/api/likes`, { postId: post.id })
+    console.log(res)
   }
 
   const handleSubmitComment = async ({ comment }) => {
-    console.log(comment)
-    const res = await axios.post(`/api/comments`, { comment, postId: post.id })
+    await mutateComments(async comments => {
+      const newComment = await axios.post(`/api/comments`, { postId: post.id, comment })
+      console.log([...comments, newComment.data.comment])
+      return [...comments, newComment.data.comment]
+    }, { revalidate: false })
+
     setPost({
       ...post,
       totalComments: post.totalComments + 1,
-      comments: [...post.comments, res.data.comment]
     })
   }
 
@@ -43,12 +64,9 @@ export default function Home(props) {
         onComment={handleNewComment}
         onLike={handleLike}
       />
-      <div className='max-w-2xl mx-auto px-6 my-6'>
-        {comments.map(comment => (
-          <p className='' key={comment.id}>This is a comment{comment.content}</p>
-        ))}
-      </div>
-      <CommentForm className='max-w-2xl mx-auto px-6 my-6' user={post.user} onSubmit={handleSubmitComment} />
+      {session && <CommentForm className='max-w-2xl mx-auto px-6 my-6' user={session.user} onSubmit={handleSubmitComment} />}
+      
+      <Comments className='max-w-2xl mx-auto px-6 my-6' comments={comments} />
     </>
   )
 }

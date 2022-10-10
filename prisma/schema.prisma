@@ -46,7 +46,7 @@ model User {
   image          String?
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @updatedAt
-  totalPost      Int        @default(0)
+  totalPosts     Int        @default(0)
   totalComments  Int        @default(0)
   totalLikes     Int        @default(0)
   totalFollowers Int        @default(0)
