@@ -6,7 +6,7 @@ import titleFromCode from "../../utils/titleFromCode"
 import formatTimeAgo from "../../utils/formatTimeAgo"
 
 
-export default function Post({ onComment, onLike, onShare, liked, post, user, className = "" }) {
+export default function Post({ onComment, onLike, onShare, liked, post, user, title, className = "" }) {
 
   return (
     <div className={className}>
@@ -25,7 +25,6 @@ export default function Post({ onComment, onLike, onShare, liked, post, user, cl
           </div>
           <div className="ml-4 flex-1">
             <div className="flex items-center justify-between">
-
               <p className="text-sm font-medium text-gray-100">
                 {user.name}
               </p>
@@ -33,7 +32,7 @@ export default function Post({ onComment, onLike, onShare, liked, post, user, cl
             </div>
             <div className="flex-1 mt-1">
               <p className="text-xl font-semibold text-gray-100">
-                {titleFromCode(post.code)}
+                {title ? title : titleFromCode(post.code) }
               </p>
             </div>
           </div>

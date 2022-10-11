@@ -93,7 +93,7 @@ export default function Home(props) {
     setPostedComment(true)
   }
 
-  const title = titleFromCode(post.code)
+  const title = titleFromCode(post.code, Infinity)
 
   return (
     <>
@@ -112,6 +112,7 @@ export default function Home(props) {
       <Post
         className='max-w-2xl mx-auto px-6 my-6'
         post={post}
+        title={title}
         user={post.user}
         onComment={handleNewComment}
         onLike={handleLike}
