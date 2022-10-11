@@ -10,9 +10,11 @@
     "storybook": "start-storybook -p 6006 -s ./public",
     "build-storybook": "build-storybook -s ./public",
     "migrate:dev": "npx dotenv -e .env.local -- prisma migrate dev",
+    "db:push": "npx dotenv -e .env.local -- prisma db push",
     "migrate:reset": "npx dotenv -e .env.local -- prisma migrate reset",
     "db:seed": "npx dotenv -e .env.local -- prisma db seed",
-    "prisma:studio": "npx dotenv -e .env.local -- prisma studio"
+    "prisma:studio": "npx dotenv -e .env.local -- prisma studio",
+    "migrate:deploy": "npx prisma migrate deploy"
   },
   "prisma": {
     "seed": "node prisma/seed.js"
