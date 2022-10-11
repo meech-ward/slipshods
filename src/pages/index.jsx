@@ -9,7 +9,6 @@ import { useState } from 'react'
 import highlight from '../utils/highlight'
 import titleFromCode from '../utils/titleFromCode'
 
-import Head from 'next/head'
 import PostSmall from '../components/PostSmall'
 import Button from '../components/Button'
 import Modal from '../components/Modal'
@@ -36,7 +35,7 @@ export default function Home(props) {
       return
     }
     if (post.liked) {
-      await axios.delete('/api/likes/'+post.liked.id)
+      await axios.delete('/api/likes/' + post.liked.id)
       setPosts(posts.map(p => p.id === post.id ? { ...p, liked: null, totalLikes: p.totalLikes - 1 } : p))
     } else {
       const res = await axios.post('/api/likes', { postId: post.id })
@@ -44,21 +43,30 @@ export default function Home(props) {
     }
   }
 
+  async function loadMore() {
+    const res = await axios.get(`/api/posts?take=20&skip=1&lastId=${posts[posts.length - 1].id}`)
+    const newPosts = res.data.posts
+    newPosts.forEach(post => {
+      post.highlightedCode = highlight(post.code, post.language)
+      post.liked = post.likes?.[0] || null
+    })
+    setPosts([...posts, ...newPosts])
+  }
 
   return (
     <>
       <NextSeo
-      title="slipshods"
-      description="A place to share code snippets"
-      canonical="https://slipshods.com/"
-      openGraph={{
-        url: 'https://slipshods.com/',
-        title: 'slipshods og',
-        description: "A place to share code snippets og",
-        site_name: 'SlipShods',
-        type: "website",
-      }}
-    />
+        title="slipshods"
+        description="A place to share code snippets"
+        canonical="https://slipshods.com/"
+        openGraph={{
+          url: 'https://slipshods.com/',
+          title: 'slipshods og',
+          description: "A place to share code snippets og",
+          site_name: 'SlipShods',
+          type: "website",
+        }}
+      />
       <div className="pt-8 pb-10 lg:pt-12 lg:pb-14 mx-auto max-w-7xl px-2">
 
         <div className='max-w-2xl mx-auto'>
@@ -74,11 +82,17 @@ export default function Home(props) {
                   post={post}
                   user={post.user}
                   onLike={() => handleLike(post)}
+                  onComment={() => router.push(`/code/${post.id}`)}
                   onShare={() => handleShare(post)}
                 />
               </li>
             ))}
           </ul>
+          {posts[posts.length - 1].id > 1 &&
+            <Button onClick={loadMore}>
+              Load More
+            </Button>
+          }
         </div>
       </div>
       <Modal open={!!showShareModal} onClose={() => setShowShareModal(false)} maxWidth="sm">
@@ -87,31 +101,6 @@ export default function Home(props) {
     </>
   )
 }
-
-async function findManyWithUser({ user }) {
-  return prisma.post.findMany({
-    orderBy: {
-      id: 'desc'
-    },
-    include: {
-      user: {
-        select: {
-          name: true,
-          image: true,
-        }
-      },
-      likes: user ? {
-        select: {
-          id: true,
-        },
-        where: {
-          userId: user.id
-        }
-      } : false
-    }
-  })
-}
-
 
 export async function getServerSideProps(context) {
   const session = await unstable_getServerSession(context.req, context.res, authOptions)
@@ -122,11 +111,11 @@ export async function getServerSideProps(context) {
     })
   }
 
-  const posts = await findManyWithUser({ user })
+  const posts = await prisma.post.findManyWithCreator({ currentUser: user, take: 20 })
 
   posts.forEach(post => {
     post.highlightedCode = highlight(post.code, post.language)
-    post.liked = post.likes[0] || null
+    post.liked = post.likes?.[0] || null
   })
 
   return {

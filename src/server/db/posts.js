@@ -1,9 +1,10 @@
 
 const posts = {
-  async findManyWithUser({skip = 0, take = 20, lastId, where, orderBy} = {}) {
+  async findManyWithCreator({ skip = 0, take = 20, lastId, where, orderBy, currentUser } = {}) {
     return this.findMany({
       skip: lastId ? 1 : skip,
       take,
+      where,
       orderBy: orderBy || {
         id: 'desc'
       },
@@ -16,34 +17,16 @@ const posts = {
             name: true,
             image: true,
           }
-        }
-      }
-    })
-  },
-  async findUniqueWithUserAndComments({where}) {
-    return this.findUnique({
-      where,
-      include: {
-        user: {
-          select: {
-            name: true,
-            image: true,
-          }
         },
-        comments: {
+        likes: currentUser ? {
           select: {
             id: true,
-            content: true,
-            createdAt: true,
-            user: {
-              select: {
-                name: true,
-                image: true,
-              }
-            }
+          },
+          where: {
+            userId: currentUser.id
           }
-        }
-      }
+        } : false
+      },
     })
   }
 }

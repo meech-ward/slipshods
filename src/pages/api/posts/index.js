@@ -77,11 +77,20 @@ async function post(req, res) {
 }
 
 async function get(req, res) {
-  const posts = await prisma.post.findMany({
-    orderBy: {
-      createdAt: "desc"
-    },
+  const { lastId, skip = 0, take = 20 } = req.query
+  const session = await unstable_getServerSession(req, res, authOptions)
+  let currentUser
+  if (session){
+    currentUser = await prisma.user.findUnique({  where: { email: session.user.email  }})
+  }
+
+  const posts = await prisma.post.findManyWithCreator({ 
+    currentUser, 
+    lastId: +lastId,
+    skip: +skip,
+    take: +take
   })
+
   res.status(200).json({ posts })
 }
 
