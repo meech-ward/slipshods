@@ -1,21 +1,15 @@
-// import '../../../styles/other.css'
-
 import prisma from '../../server/db/client'
-
-import Link from 'next/link'
-import Head from 'next/head'
 
 import highlight from '../../utils/highlight'
 
+import Head from 'next/head'
 import Post from '../../components/Post'
 import CommentForm from '../../components/CommentForm'
 import Comments from '../../components/Comments'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import useSWR from 'swr'
-
 import axios from 'axios'
-
 import { useSession, signIn, signOut } from "next-auth/react"
 
 const makeFetcher = (dataProp) => (url) => axios.get(url).then(res => res.data[dataProp])
@@ -26,10 +20,6 @@ export default function Home(props) {
 
   const [post, setPost] = useState(props.post)
   const [postedComment, setPostedComment] = useState(false)
-
-  useEffect(() => {
-
-  }, [session])
 
   useEffect(() => {
     if (!postedComment) {
@@ -57,10 +47,10 @@ export default function Home(props) {
     }
   )
 
-  console.log(liked)
+  const textareaRef = useRef(null)
 
   const handleNewComment = async () => {
-
+    textareaRef.current?.focus()
   }
 
   const handleLike = async () => {
@@ -107,7 +97,7 @@ export default function Home(props) {
         liked={!!liked}
       />
       <div className='max-w-2xl mx-auto my-6 border-t border-gray-600'>
-        {session && <CommentForm className='px-6 my-6' user={session.user} onSubmit={handleSubmitComment} />}
+        {session && <CommentForm textareaRef={textareaRef} className='px-6 my-6' user={session.user} onSubmit={handleSubmitComment} />}
 
         <Comments className='mt-6 mb-12' comments={comments} />
       </div>
