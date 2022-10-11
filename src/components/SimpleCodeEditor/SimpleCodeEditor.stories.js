@@ -4,13 +4,13 @@ export default {
   title: 'SimpleCodeEditor',
   component: SimpleCodeEditor, 
   argTypes: {
-    onSubmit: { action: 'submit' },
+    onChange: { action: 'change' },
   }
 }
 
 
 export const Primary = (args) => <SimpleCodeEditor 
-defaultValue={`
+value={`
 import SimpleCodeEditor from './index'
 
 export default {
@@ -21,5 +21,6 @@ export default {
     }
   }
 }`}
+language='javascript'
  {...args} 
  />

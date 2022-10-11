@@ -15,7 +15,7 @@ export default function highlight(code, language) {
     function replacer(match, p1, p2, p3, offset, string) {
       return "```" + p2 + "" + hljs.highlight(p3, { language: p2 }).value + "```";
     }
-    const regex = /(```([a-z]+)([.\n\r\s\S]*?)(?=`)```)/g
+    const regex = /(```(.+?)(?=[\n\r\s])([.\n\r\s\S]*?)(?=`)```)/g
     highlighted = highlighted.replace(regex, replacer)
     return highlighted
   }

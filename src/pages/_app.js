@@ -1,6 +1,6 @@
 import '../../styles/globals.css'
-import 'highlight.js/styles/github.css'
-// import 'highlight.js/styles/stackoverflow.css'
+// import 'highlight.js/styles/github.css'
+import 'highlight.js/styles/stackoverflow-dark.css'
 
 import { SessionProvider } from "next-auth/react"
 import useSWR, { SWRConfig } from 'swr'

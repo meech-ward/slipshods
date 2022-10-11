@@ -10170,6 +10170,11 @@ synchronous-promise@^2.0.15:
   resolved "https://registry.yarnpkg.com/synchronous-promise/-/synchronous-promise-2.0.16.tgz#669b75e86b4295fdcc1bb0498de9ac1af6fd51a9"
   integrity sha512-qImOD23aDfnIDNqlG1NOehdB9IYsn1V9oByPjKY1nakv2MQYCEMyX033/q+aEtYCpmYK1cv2+NTmlH+ra6GA5A==
 
+tailwind-merge@^1.6.1:
+  version "1.6.1"
+  resolved "https://registry.yarnpkg.com/tailwind-merge/-/tailwind-merge-1.6.1.tgz#36bd3a63f59860354432a0a7b7ebd04a14141035"
+  integrity sha512-wC/tta/BxpmE/4Qc7WX0OK+ajhetgpJZ+IfQMpUBOv4nWjlxQKbq/FBkcZDX7fVGq2RJBnWa3WzsPz5mUe+g7g==
+
 tailwindcss@^3.1.8:
   version "3.1.8"
   resolved "https://registry.yarnpkg.com/tailwindcss/-/tailwindcss-3.1.8.tgz#4f8520550d67a835d32f2f4021580f9fddb7b741"
