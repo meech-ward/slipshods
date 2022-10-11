@@ -7,6 +7,8 @@ import Head from 'next/head'
 import Post from '../../components/Post'
 import CommentForm from '../../components/CommentForm'
 import Comments from '../../components/Comments'
+import Modal from '../../components/Modal'
+import ShareActions from '../../components/ShareActions'
 
 import { useEffect, useRef, useState } from 'react'
 import useSWR from 'swr'
@@ -21,6 +23,7 @@ export default function Home(props) {
 
   const [post, setPost] = useState(props.post)
   const [postedComment, setPostedComment] = useState(false)
+  const [showShareModal, setShowShareModal] = useState(false)
 
   useEffect(() => {
     if (!postedComment) {
@@ -54,6 +57,11 @@ export default function Home(props) {
     textareaRef.current?.focus()
   }
 
+  const handleShare = async () => {
+    console.log("handleSare")
+    setShowShareModal(true)
+  }
+
   const handleLike = async () => {
     if (liked) {
       await mutateLiked(async liked => {
@@ -84,10 +92,12 @@ export default function Home(props) {
     setPostedComment(true)
   }
 
+  const title = titleFromCode(post.code)
+
   return (
     <>
       <Head>
-        <title>{titleFromCode(post.code)}</title>
+        <title>{title}</title>
       </Head>
       <Post
         className='max-w-2xl mx-auto px-6 my-6'
@@ -95,6 +105,7 @@ export default function Home(props) {
         user={post.user}
         onComment={handleNewComment}
         onLike={handleLike}
+        onShare={handleShare}
         liked={!!liked}
       />
       <div className='max-w-2xl mx-auto my-6 border-t border-gray-600'>
@@ -102,6 +113,9 @@ export default function Home(props) {
 
         <Comments className='mt-6 mb-12' comments={comments} />
       </div>
+      <Modal open={showShareModal}  onClose={() => setShowShareModal(false)} maxWidth="sm">
+        <ShareActions url={`https://slipshods.com/code/${post.id}`} title={title} />
+      </Modal>
     </>
   )
 }
@@ -130,7 +144,7 @@ export async function getStaticProps(context) {
       notFound: true
     }
   }
-  
+
   post.highlightedCode = highlight(post.code, post.language)
 
   return {

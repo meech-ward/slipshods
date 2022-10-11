@@ -5,7 +5,7 @@ import PostActions from "../PostActions"
 
 import titleFromCode from "../../utils/titleFromCode"
 
-export default function PostSmall({ onLike, onComment, href, post, user, className = "" }) {
+export default function PostSmall({ onLike, onComment, onShare, href, post, user, className = "" }) {
 
   return (
     <div className={'lex flex-col overflow-hidden rounded-lg shadow-lg ' + className}>
@@ -54,7 +54,7 @@ export default function PostSmall({ onLike, onComment, href, post, user, classNa
           </div>
         </a>
       </Link>
-      <PostActions onComment={onComment} onLike={onLike} liked={post.liked} totalComments={post.totalComments} totalLikes={post.totalLikes} />
+      <PostActions onComment={onComment} onLike={onLike} onShare={onShare} liked={post.liked} totalComments={post.totalComments} totalLikes={post.totalLikes} />
     </div>
   )
 }

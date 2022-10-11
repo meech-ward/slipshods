@@ -1,18 +1,47 @@
 import prisma from '../server/db/client'
 import { unstable_getServerSession } from "next-auth/next"
 import { authOptions } from "./api/auth/[...nextauth]"
+import axios from 'axios'
+
+import { signIn } from "next-auth/react"
+import { useState } from 'react'
 
 import highlight from '../utils/highlight'
+import titleFromCode from '../utils/titleFromCode'
 
 import Head from 'next/head'
 import PostSmall from '../components/PostSmall'
 import Button from '../components/Button'
+import Modal from '../components/Modal'
+import ShareActions from '../components/ShareActions'
 
 const { useRouter } = require("next/router")
 
-export default function Home({ posts }) {
+export default function Home(props) {
+  const { user } = props
+  const [posts, setPosts] = useState(props.posts)
 
   const router = useRouter()
+  const [showShareModal, setShowShareModal] = useState(false)
+
+  const handleShare = (post) => {
+    setShowShareModal(post)
+  }
+
+  const handleLike = async (post) => {
+    if (!user) {
+      signIn()
+      return
+    }
+    if (post.liked) {
+      await axios.delete('/api/likes/'+post.liked.id)
+      setPosts(posts.map(p => p.id === post.id ? { ...p, liked: null, totalLikes: p.totalLikes - 1 } : p))
+    } else {
+      const res = await axios.post('/api/likes', { postId: post.id })
+      setPosts(posts.map(p => p.id === post.id ? { ...p, liked: res.data.like, totalLikes: p.totalLikes + 1 } : p))
+    }
+  }
+
 
   return (
     <>
@@ -33,12 +62,17 @@ export default function Home({ posts }) {
                   href={`/code/${post.id}`}
                   post={post}
                   user={post.user}
+                  onLike={() => handleLike(post)}
+                  onShare={() => handleShare(post)}
                 />
               </li>
             ))}
           </ul>
         </div>
       </div>
+      <Modal open={!!showShareModal} onClose={() => setShowShareModal(false)} maxWidth="sm">
+        {showShareModal && <ShareActions url={`https://slipshods.com/code/${showShareModal.id}`} title={titleFromCode(showShareModal.code)} />}
+      </Modal>
     </>
   )
 }
@@ -81,12 +115,13 @@ export async function getServerSideProps(context) {
 
   posts.forEach(post => {
     post.highlightedCode = highlight(post.code, post.language)
-    post.liked = post.likes?.length > 0
+    post.liked = post.likes[0] || null
   })
 
   return {
     props: {
-      posts: posts
+      posts: posts,
+      user: user
     },
   }
 }
