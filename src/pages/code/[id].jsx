@@ -14,7 +14,7 @@ import { useEffect, useRef, useState } from 'react'
 import useSWR from 'swr'
 import axios from 'axios'
 import { useSession } from "next-auth/react"
-import NextSeo from 'next-seo'
+import { NextSeo }  from 'next-seo'
 
 const makeFetcher = (dataProp) => (url) => axios.get(url).then(res => res.data[dataProp])
 
