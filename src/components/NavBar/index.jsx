@@ -2,13 +2,17 @@ import { Fragment } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
-import Image from 'next/image'
+// import Image from 'next/image'
+import NextImage from 'next/future/image'
+
+import appIcon from '../../../public/app-icon.png'
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function NavBar({ navigation, onSignOut, onSignIn, user }) {
+export default function NavBar({ navigation, onSignOut, onSignIn, user, Image = NextImage }) {
+  console.log(navigation[0])
   return (
     <Disclosure as="nav" className="border-b border-gray-200">
       {({ open }) => (
@@ -30,14 +34,14 @@ export default function NavBar({ navigation, onSignOut, onSignIn, user }) {
                 <div className="flex flex-shrink-0 items-center">
                   <Link href="/">
                     <a>
-                      <img
+                      <Image
                         className="block h-8 w-auto lg:hidden"
-                        src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
+                        src={appIcon}
                         alt="Your Company"
                       />
-                      <img
+                      <Image
                         className="hidden h-8 w-auto lg:block"
-                        src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
+                        src={appIcon}
                         alt="Your Company"
                       />
                     </a>
@@ -52,12 +56,12 @@ export default function NavBar({ navigation, onSignOut, onSignIn, user }) {
                       >
                         <a
                           className={classNames(
-                            item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                            item.current ? 'bg-gray-700 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
                             'px-3 py-2 rounded-md text-sm font-medium'
                           )}
                           aria-current={item.current ? 'page' : undefined}
                         >
-                          {item.name}
+                          {!!item.Icon ? <item.Icon className="block h-6 w-6" /> : item.name}
                         </a>
                       </Link>
                     ))}
@@ -67,13 +71,13 @@ export default function NavBar({ navigation, onSignOut, onSignIn, user }) {
 
               {user ? (
                 <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                  <button
+                  {/* <button
                     type="button"
                     className="rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
                   >
                     <span className="sr-only">View notifications</span>
                     <BellIcon className="h-6 w-6" aria-hidden="true" />
-                  </button>
+                  </button> */}
 
                   {/* Profile dropdown */}
                   <Menu as="div" className="relative ml-3">
@@ -131,7 +135,7 @@ export default function NavBar({ navigation, onSignOut, onSignIn, user }) {
                 <div className="flex items-center">
                   <div className="flex-shrink-0">
                     <button onClick={onSignIn} className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
-                      Sign up/Login
+                      Log In
                     </button>
                   </div>
                 </div>

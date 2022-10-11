@@ -1,6 +1,7 @@
 import prisma from '../../server/db/client'
 
 import highlight from '../../utils/highlight'
+import titleFromCode from '../../utils/titleFromCode'
 
 import Head from 'next/head'
 import Post from '../../components/Post'
@@ -10,7 +11,7 @@ import Comments from '../../components/Comments'
 import { useEffect, useRef, useState } from 'react'
 import useSWR from 'swr'
 import axios from 'axios'
-import { useSession, signIn, signOut } from "next-auth/react"
+import { useSession } from "next-auth/react"
 
 const makeFetcher = (dataProp) => (url) => axios.get(url).then(res => res.data[dataProp])
 
@@ -40,7 +41,7 @@ export default function Home(props) {
   )
 
   const { data: liked, error: likedError, mutate: mutateLiked } = useSWR(
-    '/api/likes?postId=' + post.id,
+    session && ('/api/likes?postId=' + post.id),
     makeFetcher('like'),
     {
       fallbackData: null
@@ -86,7 +87,7 @@ export default function Home(props) {
   return (
     <>
       <Head>
-        <title>{post.title}</title>
+        <title>{titleFromCode(post.code)}</title>
       </Head>
       <Post
         className='max-w-2xl mx-auto px-6 my-6'

@@ -1,4 +1,6 @@
 import NavBar from './index'
+import { PlusCircleIcon } from '@heroicons/react/24/outline'
+import Image from 'next/image'
 
 export default {
   title: 'NavBar',
@@ -26,5 +28,7 @@ const user = {
 }
 
 
-export const Primary = (args) => <NavBar {...args} navigation={navigation} user={user} />
-export const SignedOut = (args) => <NavBar {...args} navigation={navigation} user={null} />
+export const Primary = (args) => <NavBar Image={Image} {...args} navigation={navigation} user={user} />
+export const SignedOut = (args) => <NavBar Image={Image} {...args} navigation={navigation} user={null} />
+export const Icon = (args) => <NavBar Image={Image} {...args} navigation={[{...navigation[0], Icon: PlusCircleIcon, current: false}, ...navigation.splice(1)]} user={null} />
+
