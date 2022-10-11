@@ -80,9 +80,8 @@ model Follower {
 
 model Post {
   id            Int       @id @default(autoincrement())
-  title         String
   code          String    @db.Text
-  language      String?
+  language      String
   totalComments Int       @default(0)
   totalLikes    Int       @default(0)
   createdAt     DateTime  @default(now())

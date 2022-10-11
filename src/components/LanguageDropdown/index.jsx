@@ -25,12 +25,12 @@ export default function LanguageDropdown({ language = "markdown", onChange, butt
       {({ open }) => (
         <>
           <div className="relative mt-1">
-            <Listbox.Button className={twMerge("relative w-full cursor-default rounded-xl border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm", buttonClassName)}>
+            <Listbox.Button className={twMerge("relative w-full cursor-default rounded-xl border border-gray-300 bg-dark py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm", buttonClassName)}>
               <span className="flex items-center">
                 <span className="ml-3 block">{selected}</span>
               </span>
               <span className="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2">
-                <ChevronUpDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                <ChevronUpDownIcon className="h-5 w-5 text-gray-100" aria-hidden="true" />
               </span>
             </Listbox.Button>
 
@@ -41,14 +41,14 @@ export default function LanguageDropdown({ language = "markdown", onChange, butt
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <div className={twMerge("absolute z-10 mt-0 max-h-56 w-full overflow-hidden rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm", optionsClassName)}>
+              <div className={twMerge("absolute z-10 mt-0 max-h-56 w-full overflow-hidden rounded-md bg-dark py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm", optionsClassName)}>
               <Listbox.Options className="max-h-56 w-full overflow-auto">
                 {languages.map((language, index) => (
                   <Listbox.Option
                     key={index}
                     className={({ active }) =>
                       classNames(
-                        active ? 'text-white bg-indigo-600' : 'text-gray-900',
+                        active ? 'text-white bg-indigo-600' : 'text-gray-100',
                         'relative cursor-default select-none py-2 pl-3 pr-9'
                       )
                     }

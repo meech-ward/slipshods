@@ -2,6 +2,8 @@ import Image from "next/image"
 
 import PostActions from "../PostActions"
 
+import titleFromCode from "../../utils/titleFromCode"
+
 export default function Post({ onComment, onLike, post, user, className = "" }) {
 
   return (
@@ -20,12 +22,12 @@ export default function Post({ onComment, onLike, post, user, className = "" }) 
             />
           </div>
           <div className="ml-4">
-            <p className="text-sm font-medium text-gray-900">
+            <p className="text-sm font-medium text-gray-100">
               {user.name}
             </p>
             <div className="flex-1 mt-1">
-              <p className="text-xl font-semibold text-gray-900">
-                {post.title}
+              <p className="text-xl font-semibold text-gray-100">
+                {titleFromCode(post.code)}
               </p>
             </div>
           </div>

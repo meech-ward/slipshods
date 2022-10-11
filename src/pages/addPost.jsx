@@ -12,18 +12,18 @@ import { useRouter } from 'next/router'
 export default function Profile({ user }) {
   const router = useRouter()
 
-  const handleSubmit = async ({ title, code }) => {
-    const { data } = await axios.post('/api/posts', { title, code })
+  const handleSubmit = async ({ language, code }) => {
+    const { data } = await axios.post('/api/posts', { language, code })
     console.log(data)
     router.push(`/code/${data.post.id}`)
   }
   return (
     <>
       <Head>
-        <title>Add Code Example</title>
+        <title>Create a Snippet</title>
       </Head>
       <div className="pt-8 pb-10 lg:pt-12 lg:pb-14 mx-auto max-w-7xl px-2">
-        <h1 className='text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl md:text-6xl'>Add Code Example</h1>
+        <h1 className='text-4xl font-bold tracking-tight text-gray-100 sm:text-5xl md:text-6xl'>Create a Snippet</h1>
 
 
         <div className='max-w-4xl mx-auto'>

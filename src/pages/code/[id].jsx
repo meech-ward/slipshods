@@ -80,8 +80,8 @@ export default function Home(props) {
         onComment={handleNewComment}
         onLike={handleLike}
       />
-      <div className='max-w-2xl mx-auto px-6 my-6 border-t border-gray-200'>
-        {session && <CommentForm className='my-6' user={session.user} onSubmit={handleSubmitComment} />}
+      <div className='max-w-2xl mx-auto my-6 border-t border-gray-600'>
+        {session && <CommentForm className='px-6 my-6' user={session.user} onSubmit={handleSubmitComment} />}
 
         <Comments className='mt-6 mb-12' comments={comments} />
       </div>

@@ -12,7 +12,7 @@ export default function Profile({user}) {
         <title>{user.name}</title>
       </Head>
       <div className="pt-8 pb-10 lg:pt-12 lg:pb-14 mx-auto max-w-7xl px-2">
-        <h1 className='text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl md:text-6xl'>Profile</h1>
+        <h1 className='text-4xl font-bold tracking-tight text-gray-100 sm:text-5xl md:text-6xl'>Profile</h1>
         
       <Image width={100} height={100} src={user.image} alt={user.name} />
       <h2>{user.name}</h2>

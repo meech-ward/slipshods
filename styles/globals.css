@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-html {
-  background-color: #1E1E1E;
+@layer base {
+  html {
+    @apply bg-dark text-white;
+  } 
 }

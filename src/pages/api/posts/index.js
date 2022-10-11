@@ -16,7 +16,7 @@ async function post(req, res) {
     return
   }
 
-  const { title, code } = req.body
+  const { language, code } = req.body
 
   try {
     const [updatedUser, post] = await prisma.$transaction([
@@ -32,8 +32,8 @@ async function post(req, res) {
         }),
       prisma.post.create({
         data: {
-          title,
           code,
+          language,
           userId: user.id
         }
       })

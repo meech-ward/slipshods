@@ -7,6 +7,8 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { queries } from '@storybook/testing-library'
 
+import highlight from '../utils/highlight'
+
 import PostSmall from '../components/PostSmall'
 
 export default function Home({ posts }) {
@@ -19,7 +21,6 @@ export default function Home({ posts }) {
         <title>Code Examples</title>
       </Head>
       <div className="pt-8 pb-10 lg:pt-12 lg:pb-14 mx-auto max-w-7xl px-2">
-        <h1 className='text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl md:text-6xl'>Code Examples</h1>
 
         <div className='max-w-2xl mx-auto'>
           <ul className='mt-8'>
@@ -43,6 +44,10 @@ export default function Home({ posts }) {
 
 export async function getServerSideProps() {
   const posts = await prisma.post.findManyWithUser()
+
+  posts.forEach(post => {
+    post.highlightedCode = highlight(post.code, post.language)
+  })
 
   return {
     props: {

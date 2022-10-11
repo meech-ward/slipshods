@@ -9,7 +9,7 @@ export default function NewPostForm({ defaultLanguage = "markdown", defaultCode 
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    onSubmit({ title, code, language })
+    onSubmit({ code, language })
   }
 
   const handleChange = (value) => {
@@ -24,13 +24,15 @@ export default function NewPostForm({ defaultLanguage = "markdown", defaultCode 
         <div>
 
           <LanguageDropdown
-            buttonClassName="rounded-none rounded-t-xl"
-            optionsClassName="rounded-none rounded-b-xl"
+            // buttonClassName="rounded-none rounded-t-xl"
+            // optionsClassName="rounded-none rounded-b-xl"
+            optionsClassName="mt-1"
             language={language}
             onChange={setLanguage}
           />
           <SimpleCodeEditor
-            className="rounded-none rounded-b-xl"
+            // className="rounded-none rounded-b-xl"
+            className="mt-5"
             value={code}
             onChange={handleChange}
             language={language}

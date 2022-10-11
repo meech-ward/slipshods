@@ -16,9 +16,9 @@ export default function Comment({ comment, user, className }) {
           <h3 className="text-sm font-medium">
             {user.name}
           </h3>
-          <p className="text-sm text-gray-500">{comment.createdAt}</p>
+          <p className="text-sm text-gray-300">{comment.createdAt}</p>
         </div>
-        <pre className="text-md text-gray-500">
+        <pre className="text-md text-gray-300">
           {/* <CommentMarkdown mdxSource={comment.mdxSource} />
            */}
            <code>
