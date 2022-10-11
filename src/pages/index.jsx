@@ -104,7 +104,7 @@ export default function Home(props) {
 
 export async function getServerSideProps(context) {
   const session = await unstable_getServerSession(context.req, context.res, authOptions)
-  let user
+  let user = null
   if (session) {
     user = await prisma.user.findUnique({
       where: { email: session.user.email }
