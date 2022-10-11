@@ -1,7 +1,11 @@
+// import '../../../styles/other.css'
+
 import prisma from '../../server/db/client'
 
 import Link from 'next/link'
 import Head from 'next/head'
+
+import highlight from '../../utils/highlight'
 
 import Post from '../../components/Post'
 import CommentForm from '../../components/CommentForm'
@@ -77,9 +81,9 @@ export default function Home(props) {
         onLike={handleLike}
       />
       <div className='max-w-2xl mx-auto px-6 my-6 border-t border-gray-200'>
-      {session && <CommentForm className='my-6' user={session.user} onSubmit={handleSubmitComment} />}
-      
-      <Comments className='mt-6 mb-12' comments={comments} />
+        {session && <CommentForm className='my-6' user={session.user} onSubmit={handleSubmitComment} />}
+
+        <Comments className='mt-6 mb-12' comments={comments} />
       </div>
     </>
   )
@@ -109,6 +113,8 @@ export async function getStaticProps(context) {
       notFound: true
     }
   }
+  
+  post.highlightedCode = highlight(post.code, post.language)
 
   return {
     props: {

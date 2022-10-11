@@ -30,11 +30,17 @@ export default function Post({ onComment, onLike, post, user, className = "" }) 
             </div>
           </div>
         </div>
-        <pre className="mt-5 mx-5 text-base text-gray-500">
-          <code>
-            {post.code}
-          </code>
-        </pre>
+        {post.highlightedCode ?
+          <pre className="mt-5 mx-5">
+            <code className={post.language ? `language-${post.language}` : ""} dangerouslySetInnerHTML={{ __html: post.highlightedCode }} ></code>
+          </pre>
+          :
+          <pre className="mt-5 mx-5 text-base text-gray-500">
+            <code>
+              {post.code}
+            </code>
+          </pre>
+        }
       </div>
       <PostActions
         className="mt-6"
