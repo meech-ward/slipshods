@@ -5,12 +5,8 @@ import prisma from '../../../server/db/client'
 
 async function post(req, res) {
   const session = await unstable_getServerSession(req, res, authOptions)
-  console.log(session)
-  const user = await prisma.user.findUnique({
-    where: {
-      email: session.user.email
-    }
-  })
+  const user = await prisma.user.findUnique({  where: { email: session.user.email  }})
+  
   if (!session || !user) {
     res.status(401).json({ error: "Unauthorized" })
     return

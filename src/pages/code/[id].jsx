@@ -18,7 +18,7 @@ import axios from 'axios'
 
 import { useSession, signIn, signOut } from "next-auth/react"
 
-const fetcher = (url) => axios.get(url).then(res => res.data.comments)
+const makeFetcher = (dataProp) => (url) => axios.get(url).then(res => res.data[dataProp])
 
 export default function Home(props) {
 
@@ -26,6 +26,10 @@ export default function Home(props) {
 
   const [post, setPost] = useState(props.post)
   const [postedComment, setPostedComment] = useState(false)
+
+  useEffect(() => {
+
+  }, [session])
 
   useEffect(() => {
     if (!postedComment) {
@@ -39,19 +43,40 @@ export default function Home(props) {
 
   const { data: comments, error: commentsError, mutate: mutateComments } = useSWR(
     '/api/comments?postId=' + post.id,
-    fetcher,
+    makeFetcher('comments'),
     {
       fallbackData: []
     }
   )
+
+  const { data: liked, error: likedError, mutate: mutateLiked } = useSWR(
+    '/api/likes?postId=' + post.id,
+    makeFetcher('like'),
+    {
+      fallbackData: null
+    }
+  )
+
+  console.log(liked)
 
   const handleNewComment = async () => {
 
   }
 
   const handleLike = async () => {
-    const res = await axios.post(`/api/likes`, { postId: post.id })
-    console.log(res)
+    if (liked) {
+      await mutateLiked(async liked => {
+        const res = await axios.delete(`/api/likes/${liked.id}`)
+        return null
+      }, { revalidate: false })
+      setPost(post => ({ ...post, totalLikes: post.totalLikes - 1 }))
+    } else {
+      await mutateLiked(async liked => {
+        const res = await axios.post(`/api/likes`, { postId: post.id })
+        return res.data.like
+      }, { revalidate: false })
+      setPost(post => ({ ...post, totalLikes: post.totalLikes + 1 }))
+    }
   }
 
   const handleSubmitComment = async ({ comment }) => {
@@ -79,6 +104,7 @@ export default function Home(props) {
         user={post.user}
         onComment={handleNewComment}
         onLike={handleLike}
+        liked={!!liked}
       />
       <div className='max-w-2xl mx-auto my-6 border-t border-gray-600'>
         {session && <CommentForm className='px-6 my-6' user={session.user} onSubmit={handleSubmitComment} />}

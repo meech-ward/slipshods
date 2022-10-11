@@ -14,6 +14,11 @@ async function post(req, res) {
   }
 
   const { comment: content, postId } = req.body
+  if (!content || !postId) {  
+    res.status(400).json({ error: "Bad Request" })
+    return
+  }
+
 
   try {
     // Create the new comment
@@ -59,6 +64,10 @@ async function post(req, res) {
 
 async function get(req, res) {
   const { postId, lastId, skip = 0, take = 20 } = req.query
+  if (!postId) {  
+    res.status(400).json({ error: "Bad Request" })
+    return
+  }
   const comments = await prisma.comment.findMany({
     skip: lastId ? 1 : skip,
     take,

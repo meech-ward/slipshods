@@ -4,7 +4,7 @@ import PostActions from "../PostActions"
 
 import titleFromCode from "../../utils/titleFromCode"
 
-export default function Post({ onComment, onLike, post, user, className = "" }) {
+export default function Post({ onComment, onLike, liked, post, user, className = "" }) {
 
   return (
     <div className={className}>
@@ -48,7 +48,7 @@ export default function Post({ onComment, onLike, post, user, className = "" }) 
         className="mt-6"
         onComment={onComment}
         onLike={onLike}
-        liked={post.liked}
+        liked={liked}
         totalComments={post.totalComments}
         totalLikes={post.totalLikes} />
     </div>
