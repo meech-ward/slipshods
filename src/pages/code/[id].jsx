@@ -14,6 +14,7 @@ import { useEffect, useRef, useState } from 'react'
 import useSWR from 'swr'
 import axios from 'axios'
 import { useSession } from "next-auth/react"
+import NextSeo from 'next-seo'
 
 const makeFetcher = (dataProp) => (url) => axios.get(url).then(res => res.data[dataProp])
 
@@ -96,9 +97,18 @@ export default function Home(props) {
 
   return (
     <>
-      <Head>
-        <title>{title}</title>
-      </Head>
+      <NextSeo
+      title={title}
+      description={post.code}
+      canonical="https://slipshods.com/"
+      openGraph={{
+        url: 'https://slipshods.com/code/' + post.id,
+        title: title,
+        description: post.code,
+        site_name: 'SlipShods',
+        type: "website",
+      }}
+    />
       <Post
         className='max-w-2xl mx-auto px-6 my-6'
         post={post}

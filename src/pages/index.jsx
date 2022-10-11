@@ -15,6 +15,8 @@ import Button from '../components/Button'
 import Modal from '../components/Modal'
 import ShareActions from '../components/ShareActions'
 
+import { NextSeo } from 'next-seo';
+
 const { useRouter } = require("next/router")
 
 export default function Home(props) {
@@ -45,9 +47,18 @@ export default function Home(props) {
 
   return (
     <>
-      <Head>
-        <title>slipshods</title>
-      </Head>
+      <NextSeo
+      title="slipshods"
+      description="A place to share code snippets"
+      canonical="https://slipshods.com/"
+      openGraph={{
+        url: 'https://slipshods.com/',
+        title: 'slipshods og',
+        description: "A place to share code snippets og",
+        site_name: 'SlipShods',
+        type: "website",
+      }}
+    />
       <div className="pt-8 pb-10 lg:pt-12 lg:pb-14 mx-auto max-w-7xl px-2">
 
         <div className='max-w-2xl mx-auto'>
