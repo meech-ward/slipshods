@@ -73,7 +73,7 @@ export async function getServerSideProps(context) {
 
   posts.forEach(post => {
     post.highlightedCode = highlight(post.code, post.language)
-    post.liked = post.likes.length > 0
+    post.liked = post.likes?.length > 0
   })
 
   return {
