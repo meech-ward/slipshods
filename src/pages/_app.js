@@ -8,6 +8,11 @@ import axios from 'axios'
 import SiteNavigation from "../components/SiteNavigation"
 import Head from 'next/head'
 
+import TimeAgo from 'javascript-time-ago'
+import en from 'javascript-time-ago/locale/en'
+TimeAgo.setDefaultLocale(en.locale)
+TimeAgo.addLocale(en)
+
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   return (
     <>

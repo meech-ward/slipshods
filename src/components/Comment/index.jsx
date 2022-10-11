@@ -1,4 +1,9 @@
 import Image from "next/image"
+
+import TimeAgo from 'javascript-time-ago'
+
+import formatTimeAgo from "../../utils/formatTimeAgo"
+
 export default function Comment({ comment, user, className }) {
   return (
     <div className={"flex space-x-3 " + className}>
@@ -16,7 +21,7 @@ export default function Comment({ comment, user, className }) {
           <h3 className="text-sm font-medium">
             {user.name}
           </h3>
-          <p className="text-sm text-gray-300">{comment.createdAt}</p>
+          <p className="text-sm text-gray-300">{formatTimeAgo(comment.createdAt)}</p>
         </div>
         <pre className="text-md text-gray-300">
           {/* <CommentMarkdown mdxSource={comment.mdxSource} />

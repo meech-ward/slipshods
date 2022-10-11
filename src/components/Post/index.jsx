@@ -3,14 +3,16 @@ import Image from "next/image"
 import PostActions from "../PostActions"
 
 import titleFromCode from "../../utils/titleFromCode"
+import formatTimeAgo from "../../utils/formatTimeAgo"
+
 
 export default function Post({ onComment, onLike, onShare, liked, post, user, className = "" }) {
 
   return (
     <div className={className}>
       <div className={'flex flex-col justify-between'}>
-        <div className="mt-2 flex items-center">
-          <div className="flex-shrink-0 text-gray-400">
+        <div className="mt-2 flex items-center w-full">
+          <div className="flex-shrink-0">
 
             <span className="sr-only">{post.author?.name}</span>
             <Image
@@ -21,10 +23,14 @@ export default function Post({ onComment, onLike, onShare, liked, post, user, cl
               alt=""
             />
           </div>
-          <div className="ml-4">
-            <p className="text-sm font-medium text-gray-100">
-              {user.name}
-            </p>
+          <div className="ml-4 flex-1">
+            <div className="flex items-center justify-between">
+
+              <p className="text-sm font-medium text-gray-100">
+                {user.name}
+              </p>
+              <p className="text-sm text-gray-300">{formatTimeAgo(post.createdAt)}</p>
+            </div>
             <div className="flex-1 mt-1">
               <p className="text-xl font-semibold text-gray-100">
                 {titleFromCode(post.code)}

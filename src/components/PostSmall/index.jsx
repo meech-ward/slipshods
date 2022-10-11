@@ -4,6 +4,7 @@ import Image from "next/image"
 import PostActions from "../PostActions"
 
 import titleFromCode from "../../utils/titleFromCode"
+import formatTimeAgo from "../../utils/formatTimeAgo"
 
 export default function PostSmall({ onLike, onComment, onShare, href, post, user, className = "" }) {
 
@@ -28,10 +29,13 @@ export default function PostSmall({ onLike, onComment, onShare, href, post, user
                   alt=""
                 />
               </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-100">
-                  {user.name}
-                </p>
+              <div className="ml-4 flex-1">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-medium text-gray-100">
+                    {user.name}
+                  </p>
+                  <p className="text-sm text-gray-300">{formatTimeAgo(post.createdAt)}</p>
+                </div>
                 <div className="flex-1 mt-1">
                   <p className="text-xl font-semibold text-gray-100">
                     {titleFromCode(post.code)}
