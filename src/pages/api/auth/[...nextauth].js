@@ -5,21 +5,28 @@ import GoogleProvider from "next-auth/providers/google"
 import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import prisma from "../../../server/db/client"
 
-export const authOptions = {
-  adapter: PrismaAdapter(prisma),
-  providers: [
+const providers = []
+
+if (process.env.GITHUB_ID && process.env.GITHUB_SECRET) {
+  providers.push(
     GithubProvider({
       clientId: process.env.GITHUB_ID,
       clientSecret: process.env.GITHUB_SECRET,
-    }),
+    })
+  )
+}
+if (process.env.GOOGLE_ID && process.env.GOOGLE_SECRET) {
+  providers.push(
     GoogleProvider({
       clientId: process.env.GOOGLE_ID,
       clientSecret: process.env.GOOGLE_SECRET,
-    }),
-  ],
-  jwt: {
-    maxAge: 10
-  },
+    })
+  )
+}
+
+export const authOptions = {
+  adapter: PrismaAdapter(prisma),
+  providers,
   session: {
     strategy: "jwt",
   },
@@ -29,7 +36,7 @@ export const authOptions = {
       if (account) {
         // just signed in
         // information about provider is in account
-        token.sam = "token saM"
+        // token.sam = "token saM"
       } 
       return token
     },
