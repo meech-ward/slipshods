@@ -1,19 +1,13 @@
 import prisma from '../server/db/client'
-
-import { useSession, signIn, signOut } from "next-auth/react"
-
-import Link from 'next/link'
-import Head from 'next/head'
-import Image from 'next/image'
-import { queries } from '@storybook/testing-library'
+import { unstable_getServerSession } from "next-auth/next"
+import { authOptions } from "./api/auth/[...nextauth]"
 
 import highlight from '../utils/highlight'
 
+import Head from 'next/head'
 import PostSmall from '../components/PostSmall'
 
 export default function Home({ posts }) {
-
-  const { data: session } = useSession()
 
   return (
     <>
@@ -41,12 +35,45 @@ export default function Home({ posts }) {
   )
 }
 
+async function findManyWithUser({user}) {
+  return prisma.post.findMany({
+    orderBy: {
+      id: 'desc'
+    },
+    include: {
+      user: {
+        select: {
+          name: true,
+          image: true,
+        }
+      },
+      likes: user ? {
+        select: {
+          id: true,
+        },
+        where: {
+          userId: user.id
+        }
+      } : false
+    }
+  })
+}
 
-export async function getServerSideProps() {
-  const posts = await prisma.post.findManyWithUser()
+
+export async function getServerSideProps(context) {
+  const session = await unstable_getServerSession(context.req, context.res, authOptions)
+  let user 
+  if (session) {
+    user = await prisma.user.findUnique({
+      where: { email: session.user.email }
+    })
+  }
+
+  const posts = await findManyWithUser({user})
 
   posts.forEach(post => {
     post.highlightedCode = highlight(post.code, post.language)
+    post.liked = post.likes.length > 0
   })
 
   return {
