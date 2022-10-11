@@ -11,6 +11,7 @@ async function main() {
       image: 'https://images.unsplash.com/photo-1665396695736-4c1a7eb96597?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1548&q=80',
       post: {
         create: {
+          language: "javascript",
           code: `import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 prisma.user.findMany()
@@ -36,6 +37,7 @@ prisma.user.findMany()
       post: {
         create: [
           {
+            language: "javascript",
             code: `import axios from 'axios'
 axios.get('https://twitter.com/prisma')
   .then((response) => {
@@ -47,6 +49,7 @@ axios.get('https://twitter.com/prisma')
 `,
           },
           {
+            language: "javascript",
             code: `import axios from 'axios'
 axios.get('https://twitter.com/nexusjs')
   .then((response) => {
