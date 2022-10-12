@@ -16,7 +16,7 @@ import ShareActions from '../components/ShareActions'
 
 import { NextSeo } from 'next-seo';
 
-const { useRouter } = require("next/router")
+import { useRouter } from "next/router"
 
 export default function Search(props) {
   const { user, query } = props
