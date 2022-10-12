@@ -222,9 +222,12 @@ export default function Header(props) {
                 <>
                   <div className="flex items-center px-5">
                     <div className="flex-shrink-0">
-                      <img
+                      <Image
                         className="h-10 w-10 rounded-full"
                         src={user?.image}
+                        width={50}
+                        height={50}
+                        quality={100}
                         alt=""
                       />
                     </div>
@@ -254,7 +257,7 @@ export default function Header(props) {
                     </Disclosure.Button>
                     {/* <Link
                       href="/settings"
-                    >
+                    >f
                       <Disclosure.Button
                         className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
                         as="a"
