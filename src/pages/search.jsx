@@ -64,7 +64,7 @@ export default function Search(props) {
       <div className="pt-8 pb-10 lg:pt-12 lg:pb-14 mx-auto max-w-7xl px-2">
 
         <div className='max-w-2xl mx-auto'>
-          <h1 className='text-3xl font-bold text-gray-100'>"{query}"</h1>
+          <h1 className='text-3xl font-bold text-gray-100'>&quot;{query}&quot;</h1>
           <Button onClick={() => router.push("/addPost")}>
             Create A Snippet
           </Button>
