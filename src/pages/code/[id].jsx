@@ -110,7 +110,9 @@ export default function Home(props) {
       }}
     />
       <Post
-        className='max-w-2xl mx-auto px-6 my-6'
+        className='px-6 my-3 mt-10'
+        smallMaxWith={"max-w-2xl"}
+        largeMaxWith={"max-w-7xl"}
         post={post}
         title={title}
         user={post.user}
