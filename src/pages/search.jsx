@@ -4,7 +4,7 @@ import { authOptions } from "./api/auth/[...nextauth]"
 import axios from 'axios'
 
 import { signIn } from "next-auth/react"
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import highlight from '../utils/highlight'
 import titleFromCode from '../utils/titleFromCode'
@@ -21,6 +21,10 @@ const { useRouter } = require("next/router")
 export default function Search(props) {
   const { user, query } = props
   const [posts, setPosts] = useState(props.posts)
+
+  useEffect(() => {
+    setPosts(props.posts)
+  }, [props.posts])
 
   const router = useRouter()
   const [showShareModal, setShowShareModal] = useState(false)
@@ -113,6 +117,8 @@ export async function getServerSideProps(context) {
     post.highlightedCode = highlight(post.code, post.language)
     post.liked = post.likes?.[0] || null
   })
+
+  console.log({posts, query})
 
   return {
     props: {

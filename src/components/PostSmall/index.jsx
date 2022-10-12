@@ -45,11 +45,11 @@ export default function PostSmall({ onLike, onComment, onShare, href, post, user
               </div>
             </div>
             {post.highlightedCode ?
-              <pre className="mt-8 mx-5 max-h-52 overflow-hidden border-b border-gray-700">
+              <pre className="mt-8 mx-5 max-h-52 overflow-hidden border-b border-gray-700 whitespace-pre-wrap break-words">
                 <code className={post.language ? `language-${post.language}` : ""} dangerouslySetInnerHTML={{ __html: post.highlightedCode }} ></code>
               </pre>
               :
-              <pre className="mt-8 mx-5 max-h-52 overflow-hidden border-b border-gray-700">
+              <pre className="mt-8 mx-5 max-h-52 overflow-hidden border-b border-gray-700 whitespace-pre-wrap break-words">
                 <code>
                   {post.code}
                 </code>

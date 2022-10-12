@@ -23,7 +23,7 @@ export default function Comment({ comment, user, className }) {
           </h3>
           <p className="text-sm text-gray-300">{formatTimeAgo(comment.createdAt)}</p>
         </div>
-        <pre className="text-md text-gray-300">
+        <pre className="text-md text-gray-300 whitespace-pre-wrap break-words">
           {/* <CommentMarkdown mdxSource={comment.mdxSource} />
            */}
            <code>
