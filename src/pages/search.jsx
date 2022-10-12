@@ -18,10 +18,9 @@ import { NextSeo } from 'next-seo';
 
 const { useRouter } = require("next/router")
 
-export default function Home(props) {
-  const { user } = props
+export default function Search(props) {
+  const { user, query } = props
   const [posts, setPosts] = useState(props.posts)
-  const lastPost = posts[posts.length - 1]
 
   const router = useRouter()
   const [showShareModal, setShowShareModal] = useState(false)
@@ -44,16 +43,6 @@ export default function Home(props) {
     }
   }
 
-  async function loadMore() {
-    const res = await axios.get(`/api/posts?take=20&skip=1&lastId=${lastPost?.id}`)
-    const newPosts = res.data.posts
-    newPosts.forEach(post => {
-      post.highlightedCode = highlight(post.code, post.language)
-      post.liked = post.likes?.[0] || null
-    })
-    setPosts([...posts, ...newPosts])
-  }
-
   return (
     <>
       <NextSeo
@@ -71,6 +60,7 @@ export default function Home(props) {
       <div className="pt-8 pb-10 lg:pt-12 lg:pb-14 mx-auto max-w-7xl px-2">
 
         <div className='max-w-2xl mx-auto'>
+          <h1 className='text-3xl font-bold text-gray-100'>"{query}"</h1>
           <Button onClick={() => router.push("/addPost")}>
             Create A Snippet
           </Button>
@@ -89,11 +79,6 @@ export default function Home(props) {
               </li>
             ))}
           </ul>
-          {lastPost?.id > 1 &&
-            <Button onClick={loadMore}>
-              Load More
-            </Button>
-          }
         </div>
       </div>
       <Modal open={!!showShareModal} onClose={() => setShowShareModal(false)} maxWidth="sm">
@@ -104,6 +89,7 @@ export default function Home(props) {
 }
 
 export async function getServerSideProps(context) {
+  const query = context.query.q
   const session = await unstable_getServerSession(context.req, context.res, authOptions)
   let user = null
   if (session) {
@@ -112,7 +98,16 @@ export async function getServerSideProps(context) {
     })
   }
 
-  const posts = await prisma.post.findManyWithCreator({ currentUser: user, take: 20 })
+  const search = `( ${query.split(" ").join(" & ")} ) | ${query.replace(" ", "")}`
+  const posts = await prisma.post.findManyWithCreator({ 
+    currentUser: user, 
+    take: 100, 
+    where: {
+      code: {
+        search,
+      },
+    } })
+    console.log(search)
 
   posts.forEach(post => {
     post.highlightedCode = highlight(post.code, post.language)
@@ -122,7 +117,8 @@ export async function getServerSideProps(context) {
   return {
     props: {
       posts: posts,
-      user: user
+      user: user,
+      query
     },
   }
 }

@@ -15,7 +15,12 @@ export default function SiteNavigation() {
     // { name: 'Calendar', href: '#', current: false },
   ]
 
+  const handleSearch = (text) => {
+    router.push(`/search?q=${text}`)
+  }
+
+
   return (
-    <NavBar navigation={navigation} onSignIn={signIn} onSignOut={signOut} user={session?.user} />
+    <NavBar navigation={navigation} onSignIn={signIn} onSignOut={signOut} user={session?.user} onSearch={handleSearch} />
   )
 }
