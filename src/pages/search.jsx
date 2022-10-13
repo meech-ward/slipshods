@@ -36,7 +36,7 @@ export default function Search({ user, query, session }) {
       fallbackData: []
     }
   )
-  const [loading, setLoading] = useState(!!posts)
+  const [loading, setLoading] = useState(!posts)
 
   // useEffect(() => {
   //   setPosts(props.posts)
@@ -84,7 +84,7 @@ export default function Search({ user, query, session }) {
           <Button onClick={() => router.push("/addPost")}>
             Create A Snippet
           </Button>
-          {!posts ?
+          {loading ?
             <div className='flex justify-center items-center h-80'>
               <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-100"></div>
             </div>

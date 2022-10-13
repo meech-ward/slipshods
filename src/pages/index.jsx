@@ -34,7 +34,7 @@ export default function Home({ session }) {
     postsFetcher
   )
   const lastPost = posts?.[posts.length - 1]
-  const [loading, setLoading] = useState(!!posts)
+  const [loading, setLoading] = useState(!posts)
 
   const router = useRouter()
   const [showShareModal, setShowShareModal] = useState(false)
