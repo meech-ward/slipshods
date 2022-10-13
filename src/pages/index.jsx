@@ -1,9 +1,6 @@
-// import prisma from '../server/db/client'
-import { unstable_getServerSession } from "next-auth/next"
-import { authOptions } from "./api/auth/[...nextauth]"
 import axios from 'axios'
 
-import { signIn } from "next-auth/react"
+import { useSession, signIn } from "next-auth/react"
 import { useState } from 'react'
 
 import highlight from '../utils/highlight'
@@ -38,6 +35,8 @@ export default function Home({ session }) {
 
   const router = useRouter()
   const [showShareModal, setShowShareModal] = useState(false)
+
+  const { data: session } = useSession()
 
   const handleShare = (post) => {
     setShowShareModal(post)
@@ -120,28 +119,28 @@ export default function Home({ session }) {
   )
 }
 
-export async function getServerSideProps(context) {
-  const session = await unstable_getServerSession(context.req, context.res, authOptions)
-  // let user = null
-  // if (session) {
-  //   user = await prisma.user.findUnique({
-  //     where: { email: session.user.email }
-  //   })
-  // }
+// export async function getServerSideProps(context) {
+//   const session = await unstable_getServerSession(context.req, context.res, authOptions)
+//   // let user = null
+//   // if (session) {
+//   //   user = await prisma.user.findUnique({
+//   //     where: { email: session.user.email }
+//   //   })
+//   // }
 
-  // This takes too long to load, let's do it client side
-  // const posts = await prisma.post.findManyWithCreator({currentUser: user, take: 20 })
+//   // This takes too long to load, let's do it client side
+//   // const posts = await prisma.post.findManyWithCreator({currentUser: user, take: 20 })
 
-  // posts.forEach(post => {
-  //   post.highlightedCode = highlight(post.code, post.language)
-  //   post.liked = post.likes?.[0] || null
-  // })
+//   // posts.forEach(post => {
+//   //   post.highlightedCode = highlight(post.code, post.language)
+//   //   post.liked = post.likes?.[0] || null
+//   // })
 
-  return {
-    props: {
-      // posts: posts,
-      // user: user
-      session
-    },
-  }
-}
+//   return {
+//     props: {
+//       // posts: posts,
+//       // user: user
+//       session
+//     },
+//   }
+// }
