@@ -36,7 +36,11 @@ export default function Search({ user, query, session }) {
       fallbackData: []
     }
   )
-  const [loading, setLoading] = useState(!posts)
+  const [loading, setLoading] = useState(true)
+
+  useState(() => {
+    setLoading(!posts)
+  }, [posts])
 
   // useEffect(() => {
   //   setPosts(props.posts)

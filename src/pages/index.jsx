@@ -25,13 +25,17 @@ const postsFetcher = (url) => axios.get(url).then(res => {
   return newPosts
 })
 
-export default function Home({ session }) {
+export default function Home() {
   const { data: posts, error: postsError, mutate: mutatePosts } = useSWR(
     `/api/posts?take=20&skip=0`,
     postsFetcher
   )
   const lastPost = posts?.[posts.length - 1]
-  const [loading, setLoading] = useState(!posts)
+  const [loading, setLoading] = useState(true)
+
+  useState(() => {
+    setLoading(!posts)
+  }, [posts])
 
   const router = useRouter()
   const [showShareModal, setShowShareModal] = useState(false)
