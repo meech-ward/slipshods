@@ -31,11 +31,7 @@ export default function Home() {
     postsFetcher
   )
   const lastPost = posts?.[posts.length - 1]
-  const [loading, setLoading] = useState(true)
-
-  useState(() => {
-    setLoading(!posts)
-  }, [posts])
+  const [loading, setLoading] = useState(false)
 
   const router = useRouter()
   const [showShareModal, setShowShareModal] = useState(false)
@@ -105,7 +101,7 @@ export default function Home() {
               </li>
             ))}
           </ul>
-          {loading ?
+          {(loading || !posts) ?
             <div className='flex justify-center items-center h-80'>
               <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-100"></div>
             </div>
