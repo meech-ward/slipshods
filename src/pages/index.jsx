@@ -1,4 +1,4 @@
-import prisma from '../server/db/client'
+// import prisma from '../server/db/client'
 import { unstable_getServerSession } from "next-auth/next"
 import { authOptions } from "./api/auth/[...nextauth]"
 import axios from 'axios'
@@ -13,15 +13,28 @@ import PostSmall from '../components/PostSmall'
 import Button from '../components/Button'
 import Modal from '../components/Modal'
 import ShareActions from '../components/ShareActions'
+import useSWR from 'swr'
 
 import { NextSeo } from 'next-seo';
 
 import { useRouter } from "next/router"
 
-export default function Home(props) {
-  const { user } = props
-  const [posts, setPosts] = useState(props.posts)
-  const lastPost = posts[posts.length - 1]
+const postsFetcher = (url) => axios.get(url).then(res => {
+  const newPosts = res.data.posts
+  newPosts.forEach(post => {
+    post.highlightedCode = highlight(post.code, post.language)
+    post.liked = post.likes?.[0] || null
+  })
+  return newPosts
+})
+
+export default function Home({ session }) {
+  const { data: posts, error: postsError, mutate: mutatePosts } = useSWR(
+    `/api/posts?take=20&skip=0`,
+    postsFetcher
+  )
+  const lastPost = posts?.[posts.length - 1]
+  const [loading, setLoading] = useState(!!posts)
 
   const router = useRouter()
   const [showShareModal, setShowShareModal] = useState(false)
@@ -31,7 +44,7 @@ export default function Home(props) {
   }
 
   const handleLike = async (post) => {
-    if (!user) {
+    if (!session) {
       signIn()
       return
     }
@@ -45,13 +58,12 @@ export default function Home(props) {
   }
 
   async function loadMore() {
-    const res = await axios.get(`/api/posts?take=20&skip=1&lastId=${lastPost?.id}`)
-    const newPosts = res.data.posts
-    newPosts.forEach(post => {
-      post.highlightedCode = highlight(post.code, post.language)
-      post.liked = post.likes?.[0] || null
-    })
-    setPosts([...posts, ...newPosts])
+    setLoading(true)
+    await mutatePosts(async posts => {
+      const newPosts = await postsFetcher(`/api/posts?take=20&skip=1&lastId=${lastPost?.id}`)
+      return [...posts, ...newPosts]
+    }, { revalidate: false })
+    setLoading(false)
   }
 
   return (
@@ -74,8 +86,9 @@ export default function Home(props) {
           <Button onClick={() => router.push("/addPost")}>
             Create A Snippet
           </Button>
+
           <ul className='mt-8'>
-            {posts.map(post => (
+            {posts?.map(post => (
               <li key={post.id}>
                 <PostSmall
                   className='my-10'
@@ -89,7 +102,11 @@ export default function Home(props) {
               </li>
             ))}
           </ul>
-          {lastPost?.id > 1 &&
+          {loading ?
+            <div className='flex justify-center items-center h-80'>
+              <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-100"></div>
+            </div>
+            : lastPost?.id > 1 &&
             <Button onClick={loadMore}>
               Load More
             </Button>
@@ -105,24 +122,26 @@ export default function Home(props) {
 
 export async function getServerSideProps(context) {
   const session = await unstable_getServerSession(context.req, context.res, authOptions)
-  let user = null
-  if (session) {
-    user = await prisma.user.findUnique({
-      where: { email: session.user.email }
-    })
-  }
+  // let user = null
+  // if (session) {
+  //   user = await prisma.user.findUnique({
+  //     where: { email: session.user.email }
+  //   })
+  // }
 
-  const posts = await prisma.post.findManyWithCreator({ currentUser: user, take: 20 })
+  // This takes too long to load, let's do it client side
+  // const posts = await prisma.post.findManyWithCreator({currentUser: user, take: 20 })
 
-  posts.forEach(post => {
-    post.highlightedCode = highlight(post.code, post.language)
-    post.liked = post.likes?.[0] || null
-  })
+  // posts.forEach(post => {
+  //   post.highlightedCode = highlight(post.code, post.language)
+  //   post.liked = post.likes?.[0] || null
+  // })
 
   return {
     props: {
-      posts: posts,
-      user: user
+      // posts: posts,
+      // user: user
+      session
     },
   }
 }

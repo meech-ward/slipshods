@@ -77,19 +77,29 @@ async function post(req, res) {
 }
 
 async function get(req, res) {
-  const { lastId, skip = 0, take = 20 } = req.query
+  const { lastId, skip = 0, take = 20, query } = req.query
   const session = await unstable_getServerSession(req, res, authOptions)
   let currentUser
   if (session){
     currentUser = await prisma.user.findUnique({  where: { email: session.user.email  }})
   }
 
-  const posts = await prisma.post.findManyWithCreator({ 
+  const search = query && `( ${query.split(" ").join(" & ")} ) | ${query.replace(" ", "")}`
+
+  const params = { 
     currentUser, 
     lastId: +lastId,
     skip: +skip,
     take: +take
-  })
+  }
+  if (search) {
+    params.where = {
+      code: {
+        search,
+      },
+    }
+  }
+  const posts = await prisma.post.findManyWithCreator(params)
 
   res.status(200).json({ posts })
 }

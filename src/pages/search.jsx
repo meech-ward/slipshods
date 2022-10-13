@@ -1,4 +1,4 @@
-import prisma from '../server/db/client'
+// import prisma from '../server/db/client'
 import { unstable_getServerSession } from "next-auth/next"
 import { authOptions } from "./api/auth/[...nextauth]"
 import axios from 'axios'
@@ -13,18 +13,34 @@ import PostSmall from '../components/PostSmall'
 import Button from '../components/Button'
 import Modal from '../components/Modal'
 import ShareActions from '../components/ShareActions'
+import useSWR from 'swr'
 
 import { NextSeo } from 'next-seo';
 
 import { useRouter } from "next/router"
 
-export default function Search(props) {
-  const { user, query } = props
-  const [posts, setPosts] = useState(props.posts)
+const postsFetcher = (url) => axios.get(url).then(res => {
+  const newPosts = res.data.posts
+  newPosts.forEach(post => {
+    post.highlightedCode = highlight(post.code, post.language)
+    post.liked = post.likes?.[0] || null
+  })
+  return newPosts
+})
 
-  useEffect(() => {
-    setPosts(props.posts)
-  }, [props.posts])
+export default function Search({ user, query, session }) {
+  const { data: posts, error: postsError, mutate: mutatePosts } = useSWR(
+    '/api/posts?query=' + query,
+    postsFetcher,
+    {
+      fallbackData: []
+    }
+  )
+  const [loading, setLoading] = useState(!!posts)
+
+  // useEffect(() => {
+  //   setPosts(props.posts)
+  // }, [query])
 
   const router = useRouter()
   const [showShareModal, setShowShareModal] = useState(false)
@@ -34,7 +50,7 @@ export default function Search(props) {
   }
 
   const handleLike = async (post) => {
-    if (!user) {
+    if (!session) {
       signIn()
       return
     }
@@ -68,21 +84,27 @@ export default function Search(props) {
           <Button onClick={() => router.push("/addPost")}>
             Create A Snippet
           </Button>
-          <ul className='mt-8'>
-            {posts.map(post => (
-              <li key={post.id}>
-                <PostSmall
-                  className='my-10'
-                  href={`/code/${post.id}`}
-                  post={post}
-                  user={post.user}
-                  onLike={() => handleLike(post)}
-                  onComment={() => router.push(`/code/${post.id}`)}
-                  onShare={() => handleShare(post)}
-                />
-              </li>
-            ))}
-          </ul>
+          {!posts ?
+            <div className='flex justify-center items-center h-80'>
+              <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-100"></div>
+            </div>
+            :
+            <ul className='mt-8'>
+              {posts?.map(post => (
+                <li key={post.id}>
+                  <PostSmall
+                    className='my-10'
+                    href={`/code/${post.id}`}
+                    post={post}
+                    user={post.user}
+                    onLike={() => handleLike(post)}
+                    onComment={() => router.push(`/code/${post.id}`)}
+                    onShare={() => handleShare(post)}
+                  />
+                </li>
+              ))}
+            </ul>
+          }
         </div>
       </div>
       <Modal open={!!showShareModal} onClose={() => setShowShareModal(false)} maxWidth="sm">
@@ -95,36 +117,39 @@ export default function Search(props) {
 export async function getServerSideProps(context) {
   const query = context.query.q
   const session = await unstable_getServerSession(context.req, context.res, authOptions)
-  let user = null
-  if (session) {
-    user = await prisma.user.findUnique({
-      where: { email: session.user.email }
-    })
-  }
+  // let user = null
+  // if (session) {
+  //   user = await prisma.user.findUnique({
+  //     where: { email: session.user.email }
+  //   })
+  // }
 
-  const search = `( ${query.split(" ").join(" & ")} ) | ${query.replace(" ", "")}`
-  const posts = await prisma.post.findManyWithCreator({ 
-    currentUser: user, 
-    take: 100, 
-    where: {
-      code: {
-        search,
-      },
-    } })
-    console.log(search)
+  // slow database, takes too long
+  // const search = `( ${query.split(" ").join(" & ")} ) | ${query.replace(" ", "")}`
+  // const posts = await prisma.post.findManyWithCreator({
+  //   currentUser: user,
+  //   take: 100,
+  //   where: {
+  //     code: {
+  //       search,
+  //     },
+  //   }
+  // })
+  // console.log(search)
 
-  posts.forEach(post => {
-    post.highlightedCode = highlight(post.code, post.language)
-    post.liked = post.likes?.[0] || null
-  })
+  // posts.forEach(post => {
+  //   post.highlightedCode = highlight(post.code, post.language)
+  //   post.liked = post.likes?.[0] || null
+  // })
 
-  console.log({posts, query})
+  // console.log({ posts, query })
 
   return {
     props: {
-      posts: posts,
-      user: user,
-      query
+      // posts: posts,
+      // user: user,
+      query,
+      session
     },
   }
 }
