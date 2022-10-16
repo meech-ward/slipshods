@@ -1,7 +1,7 @@
 
 const posts = {
   async findManyWithCreator({ skip = 0, take = 20, lastId, where, orderBy, currentUser } = {}) {
-    return this.findMany({
+    return (await this.findMany({
       skip: lastId ? 1 : skip,
       take,
       where,
@@ -27,6 +27,12 @@ const posts = {
           }
         } : false
       },
+    })).map(post => {
+      return {
+        ...post,
+        liked: !!post.likes?.length,
+        likes: undefined,
+      }
     })
   }
 }

@@ -5,6 +5,7 @@ import PostActions from "../PostActions"
 
 import titleFromCode from "../../utils/titleFromCode"
 import formatTimeAgo from "../../utils/formatTimeAgo"
+import highlight from "../../utils/highlight"
 
 export default function PostSmall({ onLike, onComment, onShare, href, post, user, className = "" }) {
 
@@ -18,11 +19,9 @@ export default function PostSmall({ onLike, onComment, onShare, href, post, user
           <a>
             <div className="mt-2 flex items-center">
               <div className="flex-shrink-0 text-gray-100">
-
-                <span className="sr-only">{post.author?.name}</span>
                 <Image
                   className="h-12 w-12 rounded-full"
-                  src={user.image}
+                  src={user?.image}
                   width={50}
                   height={50}
                   alt=""
@@ -31,7 +30,7 @@ export default function PostSmall({ onLike, onComment, onShare, href, post, user
               <div className="ml-4 flex-1">
                 <div className="flex items-center justify-between">
                   <p className="text-sm font-medium text-gray-100">
-                    {user.name}
+                    {user?.name}
                   </p>
                   <p className="text-sm text-gray-300">{formatTimeAgo(post.createdAt)}</p>
                 </div>
@@ -43,17 +42,9 @@ export default function PostSmall({ onLike, onComment, onShare, href, post, user
                 </div>
               </div>
             </div>
-            {post.highlightedCode ?
-              <pre className="mt-4 mx-5 max-h-52 overflow-hidden border-b border-gray-700 whitespace-pre-wrap break-words">
-                <code className={post.language ? `language-${post.language}` : ""} dangerouslySetInnerHTML={{ __html: post.highlightedCode }} ></code>
-              </pre>
-              :
-              <pre className="mt-4 mx-5 max-h-52 overflow-hidden border-b border-gray-700 whitespace-pre-wrap break-words">
-                <code>
-                  {post.code}
-                </code>
-              </pre>
-            }
+            <pre className="mt-4 mx-5 max-h-52 overflow-hidden border-b border-gray-700 whitespace-pre-wrap break-words">
+              <code className={post.language ? `language-${post.language}` : ""} dangerouslySetInnerHTML={{ __html: highlight(post.code, post.language) }} ></code>
+            </pre>
           </a>
         </Link>
       </div>

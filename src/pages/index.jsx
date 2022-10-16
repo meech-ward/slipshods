@@ -1,29 +1,21 @@
-import axios from 'axios'
 
 import { useSession, signIn } from "next-auth/react"
 import { useState } from 'react'
 
-import highlight from '../utils/highlight'
 import titleFromCode from '../utils/titleFromCode'
 
+import { NextSeo } from 'next-seo';
 import PostSmall from '../components/PostSmall'
 import Button from '../components/Button'
 import Modal from '../components/Modal'
 import ShareActions from '../components/ShareActions'
-import useSWR from 'swr'
 
-import { NextSeo } from 'next-seo';
+import useSWR from 'swr'
+import axios from 'axios'
 
 import { useRouter } from "next/router"
 
-const postsFetcher = (url) => axios.get(url).then(res => {
-  const newPosts = res.data.posts
-  newPosts.forEach(post => {
-    post.highlightedCode = highlight(post.code, post.language)
-    post.liked = post.likes?.[0] || null
-  })
-  return newPosts
-})
+const postsFetcher = (url) => axios.get(url).then(res => res.data.posts)
 
 export default function Home() {
   const { data: posts, error: postsError, mutate: mutatePosts } = useSWR(
@@ -47,13 +39,15 @@ export default function Home() {
       signIn()
       return
     }
-    if (post.liked) {
-      await axios.delete('/api/likes/' + post.liked.id)
-      setPosts(posts.map(p => p.id === post.id ? { ...p, liked: null, totalLikes: p.totalLikes - 1 } : p))
-    } else {
-      const res = await axios.post('/api/likes', { postId: post.id })
-      setPosts(posts.map(p => p.id === post.id ? { ...p, liked: res.data.like, totalLikes: p.totalLikes + 1 } : p))
-    }
+    mutatePosts(async posts => {
+      if (post.liked) {
+        await axios.delete('/api/likes/' + post.liked.id)
+        return posts.map(p => p.id === post.id ? { ...p, liked: null, totalLikes: p.totalLikes - 1 } : p)
+      } else {
+        const res = await axios.post('/api/likes', { postId: post.id })
+        return posts.map(p => p.id === post.id ? { ...p, liked: res.data.like, totalLikes: p.totalLikes + 1 } : p)
+      }
+    })
   }
 
   async function loadMore() {

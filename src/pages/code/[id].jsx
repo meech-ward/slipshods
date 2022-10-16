@@ -110,9 +110,7 @@ export default function Home(props) {
       }}
     />
       <Post
-        className='px-6 my-3 mt-10'
-        smallMaxWith={"max-w-2xl"}
-        largeMaxWith={"max-w-7xl"}
+        className='max-w-2xl mx-auto px-6 my-6'
         post={post}
         title={title}
         user={post.user}
@@ -141,12 +139,13 @@ export async function getStaticPaths() {
 }
 
 async function findPostWithUser(id) {
-  return prisma.post.findUnique({
+  const post = await prisma.post.findUnique({
     where: { id: +id },
     include: {
       user: { select: { name: true, image: true, id: true } },
     }
   })
+  return post
 }
 
 export async function getStaticProps(context) {
@@ -157,8 +156,6 @@ export async function getStaticProps(context) {
       notFound: true
     }
   }
-
-  post.highlightedCode = highlight(post.code, post.language)
 
   return {
     props: {

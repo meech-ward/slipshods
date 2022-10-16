@@ -34,40 +34,7 @@ async function post(req, res) {
         }
       })
     ])
-    // const result = await prisma.user.update({
-    //   where: {
-    //     email: session.user.email
-    //   },
-    //   data: {
-    //     posts: {
-    //       create: {
-    //         title, code
-    //       }
-    //     },
-    //     totalComments: {
-    //       increment: 1
-    //     }
-    //   },
-    //   include: {
-    //     posts: true
-    //   }
-    // })
 
-    // const result = await prisma.post.create({
-    //   data: {
-    //     title,
-    //     code,
-    //   },
-    //   include: {
-    //     user: true
-    //   }
-
-    console.log({ post })
-
-    // prisma.post.create({
-    //   data: {
-    //     title,
-    //     code,
     res.status(201).json({ post })
   } catch (error) {
     console.log(error)
