@@ -2,13 +2,12 @@ import Image from "next/image"
 
 import PostActions from "../PostActions"
 
-import titleFromCode from "../../utils/titleFromCode"
 import formatTimeAgo from "../../utils/formatTimeAgo"
 import highlight from "../../utils/highlight"
 
 import { twMerge } from "tailwind-merge"
 
-export default function Post({ onComment, onLike, onShare, liked, post, user, title, smallMaxWith, largeMaxWidth, className = "" }) {
+export default function Post({ onComment, onLike, onShare, liked, post, user, smallMaxWith, largeMaxWidth, className = "" }) {
 
   return (
     <>
@@ -33,7 +32,7 @@ export default function Post({ onComment, onLike, onShare, liked, post, user, ti
           </div>
           <div className="flex-1 mt-1">
             <p className="text-xl font-semibold text-gray-100">
-              {title ? title : titleFromCode(post.code)}
+              {post.title}
             </p>
           </div>
         </div>

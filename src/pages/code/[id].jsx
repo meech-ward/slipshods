@@ -1,9 +1,6 @@
 import prisma from '../../server/db/client'
 
-import highlight from '../../utils/highlight'
-import titleFromCode from '../../utils/titleFromCode'
-
-import Head from 'next/head'
+import { NextSeo }  from 'next-seo'
 import Post from '../../components/Post'
 import CommentForm from '../../components/CommentForm'
 import Comments from '../../components/Comments'
@@ -14,7 +11,6 @@ import { useEffect, useRef, useState } from 'react'
 import useSWR from 'swr'
 import axios from 'axios'
 import { useSession } from "next-auth/react"
-import { NextSeo }  from 'next-seo'
 
 const makeFetcher = (dataProp) => (url) => axios.get(url).then(res => res.data[dataProp])
 
@@ -93,7 +89,7 @@ export default function Home(props) {
     setPostedComment(true)
   }
 
-  const title = titleFromCode(post.code, Infinity)
+  const title = post.title
 
   return (
     <>

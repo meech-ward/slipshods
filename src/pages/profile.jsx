@@ -5,7 +5,6 @@ import { authOptions } from "./api/auth/[...nextauth]"
 import { useState } from 'react'
 
 import highlight from '../utils/highlight'
-import titleFromCode from '../utils/titleFromCode'
 
 import Image from 'next/future/image'
 import PostSmall from '../components/PostSmall'
@@ -54,7 +53,7 @@ export default function Search(props) {
         </div>
       </div>
       <Modal open={!!showShareModal} onClose={() => setShowShareModal(false)} maxWidth="sm">
-        {showShareModal && <ShareActions url={`https://slipshods.com/code/${showShareModal.id}`} title={titleFromCode(showShareModal.code)} />}
+        {showShareModal && <ShareActions url={`https://slipshods.com/code/${showShareModal.id}`} title={showShareModal.title} />}
       </Modal>
     </>
   )

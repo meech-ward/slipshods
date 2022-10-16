@@ -2,8 +2,6 @@
 import { useSession, signIn } from "next-auth/react"
 import { useState } from 'react'
 
-import titleFromCode from '../utils/titleFromCode'
-
 import { NextSeo } from 'next-seo';
 import PostSmall from '../components/PostSmall'
 import Button from '../components/Button'
@@ -107,7 +105,7 @@ export default function Home() {
         </div>
       </div>
       <Modal open={!!showShareModal} onClose={() => setShowShareModal(false)} maxWidth="sm">
-        {showShareModal && <ShareActions url={`https://slipshods.com/code/${showShareModal.id}`} title={titleFromCode(showShareModal.code)} />}
+        {showShareModal && <ShareActions url={`https://slipshods.com/code/${showShareModal.id}`} title={showShareModal.title} />}
       </Modal>
     </>
   )

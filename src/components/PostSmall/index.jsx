@@ -3,7 +3,6 @@ import Image from "next/image"
 
 import PostActions from "../PostActions"
 
-import titleFromCode from "../../utils/titleFromCode"
 import formatTimeAgo from "../../utils/formatTimeAgo"
 import highlight from "../../utils/highlight"
 
@@ -36,7 +35,7 @@ export default function PostSmall({ onLike, onComment, onShare, href, post, user
                 </div>
                 <div className="flex-1 mt-1">
                   <p className="text-xl font-semibold text-gray-100">
-                    {titleFromCode(post.code)}
+                    {post.title}
                   </p>
 
                 </div>

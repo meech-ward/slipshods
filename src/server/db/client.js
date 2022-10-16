@@ -1,5 +1,8 @@
 import { PrismaClient } from "@prisma/client"
+
 import posts from './posts'
+
+import titleFromCode from "../../utils/titleFromCode"
 
 let prisma
 
@@ -21,16 +24,23 @@ const convertDatesToString = (post) => {
   post?.createdAt && (post.createdAt = post.createdAt.toString())
   post?.updatedAt && (post.updatedAt = post.updatedAt.toString())
 }
+const actionForSingleOrMultiple = (thing, action) => {
+  if (Array.isArray(thing)) {
+    thing.forEach(action)
+  } else {
+    action(thing)
+  }
+}
+
 
 prisma.$use(async (params, next) => {
   
   const result = await next(params)
   
   if (params.action.startsWith("find")) {
-    if (Array.isArray(result)) {
-      result.forEach(convertDatesToString)
-    } else {
-      convertDatesToString(result)
+    actionForSingleOrMultiple(result, convertDatesToString)
+    if (params.model === "Post") {
+      actionForSingleOrMultiple(result, post => post.title = titleFromCode(post.code))
     }
   }
   return result
