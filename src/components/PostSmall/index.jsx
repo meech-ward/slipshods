@@ -48,7 +48,14 @@ export default function PostSmall({ onLike, onComment, onShare, href, post, user
         </Link>
       </div>
       <div className="flex flex-col items-center pb-3">
-        <PostActions onComment={onComment} onLike={onLike} onShare={onShare} liked={post.liked} totalComments={post.totalComments} totalLikes={post.totalLikes} />
+        <PostActions
+          onComment={onComment}
+          onLike={onLike}
+          onShare={onShare}
+          liked={post.liked}
+          totalComments={post.totalComments}
+          totalLikes={post.totalLikes}
+        />
       </div>
 
     </div>
